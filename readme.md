@@ -499,7 +499,7 @@ qwen3.5:latest             6488c96fa5fa    6.6 GB    4 weeks ago
 | `llama3:latest` | 범용 대화/분석 | 일반 목적 모델 |
 | `llama2:latest` | 범용 대화/분석 | 비교 실험용 |
 | `qwen3.5:latest` | 고성능 범용 추론 | 용량이 커서 메모리 여유 필요 |
-| `qwen3.5:cloud` | 교육/운영 환경별 커스텀 태그 사용 시 | `SIZE`가 `-`면 로컬 파일이 아닌 참조형 엔트리일 수 있으며 환경별 지원 여부 확인 필요 |
+| `qwen3.5:cloud` | 교육/운영 환경별 커스텀 태그 사용 시 | 환경별 지원 여부를 먼저 확인 |
 
 ### 2) Ollama 설치 방법
 
@@ -543,11 +543,12 @@ ollama pull qwen3.5:latest
 
 클라우드 태그 사용 시(선택):
 
+> `qwen3.5:cloud`는 표준 로컬 태그가 아닌 환경별 태그일 수 있습니다.  
+> `SIZE`가 `-`로 보이면 로컬 파일이 아닌 참조형 엔트리일 수 있으므로 먼저 사용 가능 여부를 확인하세요.
+
 ```bash
 ollama pull qwen3.5:cloud
 ```
-
-> `qwen3.5:cloud`는 표준 로컬 태그가 아닌 환경별 태그일 수 있으므로, `ollama pull qwen3.5:cloud` 실행 결과와 `ollama list` 출력으로 사용 가능 여부를 먼저 확인하세요.
 
 설치 확인:
 
