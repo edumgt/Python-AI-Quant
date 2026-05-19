@@ -499,7 +499,7 @@ qwen3.5:latest             6488c96fa5fa    6.6 GB    4 weeks ago
 | `llama3:latest` | 범용 대화/분석 | 일반 목적 모델 |
 | `llama2:latest` | 범용 대화/분석 | 비교 실험용 |
 | `qwen3.5:latest` | 고성능 범용 추론 | 용량이 커서 메모리 여유 필요 |
-| `qwen3.5:cloud` | 교육/운영 환경별 커스텀 태그 사용 시 | 환경별 지원 여부를 먼저 확인 |
+| `qwen3.5:cloud` | 교육/운영 환경별 커스텀 태그 사용 시 | 표준 태그가 아닐 수 있으므로 환경에서 지원되는지 먼저 확인 |
 
 ### 2) Ollama 설치 방법
 
@@ -517,7 +517,7 @@ ollama serve
 ```
 
 > `ollama serve`는 포그라운드로 실행되므로, 별도 터미널에서 `ollama pull`, `ollama run`을 수행하세요.
-> 상시 백그라운드 서비스가 필요하면 `systemctl status|start|stop ollama`(systemd 환경) 또는 `nohup ollama serve > /tmp/ollama.log 2>&1 &` 방식으로 실행하세요.
+> 상시 백그라운드 서비스가 필요하면 `systemctl status ollama`, `systemctl start ollama`, `systemctl stop ollama`(systemd 환경) 또는 `nohup ollama serve > /tmp/ollama.log 2>&1 &` 방식으로 실행하세요.
 
 #### B. Windows에서 Ollama 설치
 
