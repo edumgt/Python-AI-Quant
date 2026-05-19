@@ -473,6 +473,127 @@ QDRANT_URL=http://localhost:6333 QDRANT_COLLECTION=finance_docs ./scripts/upload
 
 ---
 
+## 🦙 Ollama 모델 설치/운영 가이드 (Windows + WSL2)
+
+아래는 현재 실습 환경에서 사용 중인 Ollama 모델 예시입니다.
+
+```bash
+ollama list
+NAME                       ID              SIZE      MODIFIED
+nomic-embed-text:latest    0a109f422b47    274 MB    2 days ago
+ko-llama:latest            5aa9af0d11cc    1.3 GB    2 weeks ago
+qwen2.5-coder:1.5b-base    02e0f2817a89    986 MB    2 weeks ago
+llama3:latest              365c0bd3c000    4.7 GB    2 weeks ago
+llama2:latest              78e26419b446    3.8 GB    4 weeks ago
+qwen3.5:cloud              a7bf6f7891c3    -         4 weeks ago
+qwen3.5:latest             6488c96fa5fa    6.6 GB    4 weeks ago
+```
+
+### 1) 모델별 용도 요약
+
+| 모델 | 용도 | 비고 |
+|------|------|------|
+| `nomic-embed-text:latest` | 문서 임베딩(RAG/Vector DB) | 텍스트 임베딩 전용 |
+| `ko-llama:latest` | 한국어 질의응답/요약 | 한국어 대응이 필요한 실습용 |
+| `qwen2.5-coder:1.5b-base` | 코드 생성/코드 설명 | 경량 코딩 모델 |
+| `llama3:latest` | 범용 대화/분석 | 일반 목적 모델 |
+| `llama2:latest` | 범용 대화/분석 | 비교 실험용 |
+| `qwen3.5:latest` | 고성능 범용 추론 | 용량이 커서 메모리 여유 필요 |
+| `qwen3.5:cloud` | 클라우드 연결형 사용 시 | 로컬 저장 용량이 `-` 로 표시될 수 있음 |
+
+### 2) Ollama 설치 방법
+
+#### A. Linux/WSL(Ubuntu)에서 Ollama 설치
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama --version
+```
+
+서비스 시작:
+
+```bash
+ollama serve
+```
+
+> `ollama serve`는 포그라운드로 실행되므로, 별도 터미널에서 `ollama pull`, `ollama run`을 수행하세요.
+
+#### B. Windows에서 Ollama 설치
+
+1. <https://ollama.com/download/windows> 에서 설치 파일 다운로드
+2. 설치 후 PowerShell에서 버전 확인
+
+```powershell
+ollama --version
+```
+
+3. 기본 API 주소 확인: `http://127.0.0.1:11434`
+
+### 3) 모델 설치(다운로드) 명령
+
+```bash
+ollama pull nomic-embed-text:latest
+ollama pull ko-llama:latest
+ollama pull qwen2.5-coder:1.5b-base
+ollama pull llama3:latest
+ollama pull llama2:latest
+ollama pull qwen3.5:latest
+```
+
+클라우드 태그 사용 시(선택):
+
+```bash
+ollama pull qwen3.5:cloud
+```
+
+설치 확인:
+
+```bash
+ollama list
+```
+
+### 4) Windows Ollama를 WSL2에서 사용하는 방법
+
+Windows에 Ollama를 설치/실행하고, WSL에서는 클라이언트처럼 붙어서 사용합니다.
+
+#### 방법 A (우선 시도): localhost 직접 사용
+
+```bash
+export OLLAMA_HOST=http://127.0.0.1:11434
+ollama list
+```
+
+#### 방법 B (localhost 연결 실패 시): Windows host IP 사용
+
+```bash
+WIN_HOST_IP=$(awk '/nameserver/ {print $2; exit}' /etc/resolv.conf)
+export OLLAMA_HOST=http://$WIN_HOST_IP:11434
+ollama list
+```
+
+영구 적용(WSL):
+
+```bash
+echo 'export OLLAMA_HOST=http://127.0.0.1:11434' >> ~/.bashrc
+source ~/.bashrc
+```
+
+연결 테스트:
+
+```bash
+curl $OLLAMA_HOST/api/tags
+```
+
+### 5) 실무 체크포인트 / 트러블슈팅
+
+- Windows 방화벽에서 `11434` 포트 허용 확인
+- WSL에서 `curl $OLLAMA_HOST/api/tags` 응답이 없으면 `OLLAMA_HOST`를 방법 A/B로 전환
+- 모델 다운로드 중 중단되면 동일 `ollama pull <모델>` 재실행(이어받기)
+- 대용량 모델(`qwen3.5:latest`)은 RAM/디스크 여유 확인 후 설치
+- RAG 임베딩은 `nomic-embed-text:latest`를 우선 사용 권장
+
+---
+
 # 퀀트 시스템 연동 가능한 증권사 API
 
 ## 주요 증권사 API 비교
