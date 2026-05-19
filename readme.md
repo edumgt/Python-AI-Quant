@@ -499,7 +499,7 @@ qwen3.5:latest             6488c96fa5fa    6.6 GB    4 weeks ago
 | `llama3:latest` | 범용 대화/분석 | 일반 목적 모델 |
 | `llama2:latest` | 범용 대화/분석 | 비교 실험용 |
 | `qwen3.5:latest` | 고성능 범용 추론 | 용량이 커서 메모리 여유 필요 |
-| `qwen3.5:cloud` | 클라우드 연결형 사용 시 | 인터넷 연결/계정 인증이 필요할 수 있으며 로컬 저장 용량이 `-` 로 표시될 수 있음 |
+| `qwen3.5:cloud` | 교육/운영 환경별 커스텀 태그 사용 시 | `SIZE`가 `-`면 로컬 파일이 아닌 참조형 엔트리일 수 있으며 환경별 지원 여부 확인 필요 |
 
 ### 2) Ollama 설치 방법
 
@@ -517,7 +517,7 @@ ollama serve
 ```
 
 > `ollama serve`는 포그라운드로 실행되므로, 별도 터미널에서 `ollama pull`, `ollama run`을 수행하세요.
-> 상시 백그라운드 서비스가 필요하면 systemd(리눅스 서버) 또는 `nohup ollama serve > /tmp/ollama.log 2>&1 &` 방식으로 실행하세요.
+> 상시 백그라운드 서비스가 필요하면 `systemctl status|start|stop ollama`(systemd 환경) 또는 `nohup ollama serve > /tmp/ollama.log 2>&1 &` 방식으로 실행하세요.
 
 #### B. Windows에서 Ollama 설치
 
@@ -547,7 +547,7 @@ ollama pull qwen3.5:latest
 ollama pull qwen3.5:cloud
 ```
 
-> `qwen3.5:cloud`는 로컬 추론 모델과 달리 원격 연결 기반으로 동작할 수 있어 인터넷 연결 상태/계정 상태에 따라 사용 가능 여부가 달라질 수 있습니다.
+> `qwen3.5:cloud`는 표준 로컬 태그가 아닌 환경별 태그일 수 있으므로, `ollama pull qwen3.5:cloud` 실행 결과와 `ollama list` 출력으로 사용 가능 여부를 먼저 확인하세요.
 
 설치 확인:
 
