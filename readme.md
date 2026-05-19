@@ -517,7 +517,9 @@ ollama serve
 ```
 
 > `ollama serve`는 포그라운드로 실행되므로, 별도 터미널에서 `ollama pull`, `ollama run`을 수행하세요.
-> 상시 백그라운드 서비스가 필요하면 `systemctl status ollama`, `systemctl start ollama`, `systemctl stop ollama`(systemd 환경) 또는 `nohup ollama serve > /tmp/ollama.log 2>&1 &` 방식으로 실행하세요.
+> 상시 백그라운드 서비스가 필요하면 아래 중 하나를 사용하세요.  
+> - systemd 환경: `systemctl status ollama`, `systemctl start ollama`, `systemctl stop ollama`  
+> - systemd 미사용 환경: `nohup ollama serve > /tmp/ollama.log 2>&1 &`
 
 #### B. Windows에서 Ollama 설치
 
