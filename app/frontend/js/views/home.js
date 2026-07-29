@@ -32,7 +32,7 @@ function chartCard(market) {
         <div class="home-market-loading" data-loading="${market.id}"><i class="fa-solid fa-spinner fa-spin"></i> 데이터 불러오는 중…</div>
       </div>
       <footer class="home-market-foot">
-        <span><i class="fa-solid fa-chart-line"></i> 일봉 · MA20</span>
+        <span><i class="fa-solid fa-chart-line"></i> 일봉 · MA20 · 거래량</span>
         <span data-simulated="${market.id}"></span>
       </footer>
     </section>`;
@@ -129,14 +129,23 @@ export function homeView(container, navigate) {
         x: new Date(point.date).getTime(),
         y: index < 19 ? null : ohlcv.slice(index - 19, index + 1).reduce((sum, item) => sum + item.c, 0) / 20,
       }));
+      const volume = ohlcv.map((point) => ({
+        x: new Date(point.date).getTime(),
+        y: point.v || 0,
+        fillColor: point.c >= point.o ? '#fca5a5' : '#93c5fd',
+      }));
       const chart = new ApexCharts(chartEl, {
         chart: { type: 'candlestick', height: chartHeight(id), toolbar: { show: false }, zoom: { enabled: false }, animations: { enabled: false }, background: '#fff', fontFamily: 'Pretendard, -apple-system, "Malgun Gothic", sans-serif' },
-        series: [{ name: market.name, type: 'candlestick', data: candles }, { name: 'MA20', type: 'line', data: ma20 }],
-        plotOptions: { candlestick: { colors: { upward: '#e11d48', downward: '#2563eb' }, wick: { useFillColor: true } } },
-        colors: ['#2563eb', market.color], stroke: { curve: 'smooth', width: [1, 1.7] },
+        series: [{ name: market.name, type: 'candlestick', data: candles }, { name: 'MA20', type: 'line', data: ma20 }, { name: '거래량', type: 'bar', data: volume }],
+        plotOptions: { candlestick: { colors: { upward: '#e11d48', downward: '#2563eb' }, wick: { useFillColor: true } }, bar: { columnWidth: '65%' } },
+        colors: ['#2563eb', market.color, '#94a3b8'], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
         xaxis: { type: 'datetime', labels: { format: 'MM-dd', style: { fontSize: '10px', colors: '#94a3b8' }, hideOverlappingLabels: true, datetimeUTC: false }, axisBorder: { show: false }, axisTicks: { show: false } },
-        yaxis: { labels: { formatter: (value) => value ? Math.round(value).toLocaleString() : '', style: { fontSize: '10px', colors: '#94a3b8' } } },
-        grid: { borderColor: '#eef2f7', strokeDashArray: 3, padding: { right: 10, left: 4 } }, tooltip: { shared: false, x: { format: 'yyyy-MM-dd' } }, legend: { show: false },
+        yaxis: [
+          { labels: { formatter: (value) => value ? Math.round(value).toLocaleString() : '', style: { fontSize: '10px', colors: '#94a3b8' } } },
+          { show: false },
+          { show: false, seriesName: '거래량' },
+        ],
+        grid: { borderColor: '#eef2f7', strokeDashArray: 3, padding: { right: 10, left: 4 } }, tooltip: { shared: true, x: { format: 'yyyy-MM-dd' }, y: { formatter: (value, { seriesIndex }) => seriesIndex === 2 ? Math.round(value).toLocaleString() : value?.toLocaleString(undefined, { maximumFractionDigits: 2 }) } }, legend: { show: false },
       });
       charts.set(id, chart);
       await chart.render();
