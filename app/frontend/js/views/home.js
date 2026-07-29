@@ -142,7 +142,7 @@ export function homeView(container, navigate) {
         series: [{ name: market.name, type: 'candlestick', data: candles }, { name: 'MA20', type: 'line', data: ma20 }, { name: '거래량', type: 'bar', data: volume }],
         plotOptions: { candlestick: { colors: { upward: UPWARD_COLOR, downward: DOWNWARD_COLOR }, wick: { useFillColor: true } }, bar: { columnWidth: '65%' } },
         // ApexCharts requires a color per series; individual volume bars override this fallback by direction.
-        colors: [DOWNWARD_COLOR, market.color, UPWARD_COLOR], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
+        colors: [UPWARD_COLOR, market.color, UPWARD_COLOR], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
         xaxis: { type: 'datetime', labels: { format: 'MM-dd', style: { fontSize: '10px', colors: '#94a3b8' }, hideOverlappingLabels: true, datetimeUTC: false }, axisBorder: { show: false }, axisTicks: { show: false } },
         yaxis: [
           { labels: { formatter: (value) => value ? Math.round(value).toLocaleString() : '', style: { fontSize: '10px', colors: '#94a3b8' } } },
@@ -151,7 +151,7 @@ export function homeView(container, navigate) {
         ],
         grid: { borderColor: '#eef2f7', strokeDashArray: 3, padding: { right: 10, left: 4 } },
         tooltip: {
-          shared: true,
+          shared: false,
           x: { format: 'yyyy-MM-dd' },
           y: {
             formatter: (value, { seriesIndex }) => seriesIndex === VOLUME_SERIES_INDEX
