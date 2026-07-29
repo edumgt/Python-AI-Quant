@@ -138,14 +138,24 @@ export function homeView(container, navigate) {
         chart: { type: 'candlestick', height: chartHeight(id), toolbar: { show: false }, zoom: { enabled: false }, animations: { enabled: false }, background: '#fff', fontFamily: 'Pretendard, -apple-system, "Malgun Gothic", sans-serif' },
         series: [{ name: market.name, type: 'candlestick', data: candles }, { name: 'MA20', type: 'line', data: ma20 }, { name: '거래량', type: 'bar', data: volume }],
         plotOptions: { candlestick: { colors: { upward: '#e11d48', downward: '#2563eb' }, wick: { useFillColor: true } }, bar: { columnWidth: '65%' } },
-        colors: ['#2563eb', market.color], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
+        colors: ['#2563eb', market.color, '#e11d48'], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
         xaxis: { type: 'datetime', labels: { format: 'MM-dd', style: { fontSize: '10px', colors: '#94a3b8' }, hideOverlappingLabels: true, datetimeUTC: false }, axisBorder: { show: false }, axisTicks: { show: false } },
         yaxis: [
           { labels: { formatter: (value) => value ? Math.round(value).toLocaleString() : '', style: { fontSize: '10px', colors: '#94a3b8' } } },
           { show: false },
           { show: false, seriesName: '거래량' },
         ],
-        grid: { borderColor: '#eef2f7', strokeDashArray: 3, padding: { right: 10, left: 4 } }, tooltip: { shared: true, x: { format: 'yyyy-MM-dd' }, y: { formatter: (value, { seriesIndex }) => seriesIndex === 2 ? Math.round(value).toLocaleString() : value?.toLocaleString(undefined, { maximumFractionDigits: 2 }) } }, legend: { show: false },
+        grid: { borderColor: '#eef2f7', strokeDashArray: 3, padding: { right: 10, left: 4 } },
+        tooltip: {
+          shared: true,
+          x: { format: 'yyyy-MM-dd' },
+          y: {
+            formatter: (value, { seriesIndex }) => seriesIndex === 2
+              ? Math.round(value).toLocaleString()
+              : value?.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+          },
+        },
+        legend: { show: false },
       });
       charts.set(id, chart);
       await chart.render();
