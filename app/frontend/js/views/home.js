@@ -6,6 +6,9 @@ const HOME_MARKETS = [
 ];
 
 const PERIODS = [['1mo', '1M'], ['3mo', '3M'], ['6mo', '6M'], ['1y', '1Y']];
+const UPWARD_COLOR = '#e11d48';
+const DOWNWARD_COLOR = '#2563eb';
+const VOLUME_SERIES_INDEX = 2;
 
 function chartCard(market) {
   return `
@@ -132,13 +135,14 @@ export function homeView(container, navigate) {
       const volume = ohlcv.map((point) => ({
         x: new Date(point.date).getTime(),
         y: point.v || 0,
-        fillColor: point.c >= point.o ? '#e11d48' : '#2563eb',
+        fillColor: point.c >= point.o ? UPWARD_COLOR : DOWNWARD_COLOR,
       }));
       const chart = new ApexCharts(chartEl, {
         chart: { type: 'candlestick', height: chartHeight(id), toolbar: { show: false }, zoom: { enabled: false }, animations: { enabled: false }, background: '#fff', fontFamily: 'Pretendard, -apple-system, "Malgun Gothic", sans-serif' },
         series: [{ name: market.name, type: 'candlestick', data: candles }, { name: 'MA20', type: 'line', data: ma20 }, { name: '거래량', type: 'bar', data: volume }],
-        plotOptions: { candlestick: { colors: { upward: '#e11d48', downward: '#2563eb' }, wick: { useFillColor: true } }, bar: { columnWidth: '65%' } },
-        colors: ['#2563eb', market.color, '#e11d48'], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
+        plotOptions: { candlestick: { colors: { upward: UPWARD_COLOR, downward: DOWNWARD_COLOR }, wick: { useFillColor: true } }, bar: { columnWidth: '65%' } },
+        // ApexCharts requires a color per series; individual volume bars override this fallback by direction.
+        colors: [DOWNWARD_COLOR, market.color, UPWARD_COLOR], stroke: { curve: 'smooth', width: [1, 1.7, 0] },
         xaxis: { type: 'datetime', labels: { format: 'MM-dd', style: { fontSize: '10px', colors: '#94a3b8' }, hideOverlappingLabels: true, datetimeUTC: false }, axisBorder: { show: false }, axisTicks: { show: false } },
         yaxis: [
           { labels: { formatter: (value) => value ? Math.round(value).toLocaleString() : '', style: { fontSize: '10px', colors: '#94a3b8' } } },
@@ -150,7 +154,7 @@ export function homeView(container, navigate) {
           shared: true,
           x: { format: 'yyyy-MM-dd' },
           y: {
-            formatter: (value, { seriesIndex }) => seriesIndex === 2
+            formatter: (value, { seriesIndex }) => seriesIndex === VOLUME_SERIES_INDEX
               ? Math.round(value).toLocaleString()
               : value?.toLocaleString(undefined, { maximumFractionDigits: 2 }),
           },
