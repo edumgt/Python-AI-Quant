@@ -50,6 +50,31 @@ SAMSUNG_START_DATE=2023-01-01 SAMSUNG_END_DATE=2024-01-01 \
 전략과 Dockerfile은 [lean-samsung/](lean-samsung/)에 있습니다. 이 구성은 Custom
 Data 기반의 동작 예제이므로 KRX 수수료·배당·거래일·환율 모델을 포함하지 않습니다.
 
+## 현대자동차 LEAN 추세 신호 검증 (별도 Compose 구성)
+
+현대자동차 보통주(`005380.KS`)의 Yahoo Finance 일봉 Custom Data로 2026년 상반기
+추세 신호를 검증할 수 있습니다. 2022~2025년 데이터로 이동평균을 준비한 뒤,
+`SMA20 > SMA60`일 때 롱 신호를 내고 그 외에는 현금 보유하는 전략입니다.
+
+```bash
+docker compose -f docker-compose.hd.yaml run --build --rm hyundai-backtest
+```
+
+기본 데이터 기간은 2022-01-01부터 2026-06-30까지이며, 검증 기간은 2026년
+상반기입니다. 다른 기간을 지정하려면 다음 환경 변수를 설정합니다.
+
+```bash
+HYUNDAI_DATA_START_DATE=2022-01-01 HYUNDAI_DATA_END_DATE=2026-07-01 \
+HYUNDAI_TEST_START_DATE=2026-01-01 HYUNDAI_TEST_END_DATE=2026-07-01 \
+  docker compose -f docker-compose.hd.yaml run --build --rm hyundai-backtest
+```
+
+실행 결과는 `hyundai-results/`에 저장되며,
+`hyundai-2026-h1-report.html`에서 월별 다음 거래일 방향 적중률, 신호 전략과
+단순 보유의 누적 수익률, 주문 수·순수익·낙폭·Sharpe Ratio를 확인할 수 있습니다.
+전략과 상세 사용법은 [lean-hyundai/](lean-hyundai/)에서 확인하세요. 이 검증은
+과거 가격 기반 신호 예제이며 KRX 수수료·세금·배당·액면분할·환율은 반영하지 않습니다.
+
 ### 포트 또는 API 키 설정
 
 이미 같은 포트를 사용 중이면 저장소 루트에 `.env` 파일을 만들고 값을 바꿉니다.
