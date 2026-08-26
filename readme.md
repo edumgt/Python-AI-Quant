@@ -43,6 +43,18 @@
 
 로컬 PC에서 실행하는 학습용 웹앱입니다. 가장 간단한 방법은 Docker Compose를 사용하는 것입니다.
 
+## 기술 스택
+
+| 구분 | 기술 |
+| --- | --- |
+| 백엔드 | Python 3.12, FastAPI, Uvicorn, ORJSON |
+| 프론트엔드 | HTML, CSS, JavaScript, Mermaid |
+| 데이터·분석 | Pandas, NumPy, scikit-learn, PyTorch, yfinance, PyKrx, OpenDART |
+| 데이터 저장·검색 | MongoDB, Qdrant |
+| AI·RAG | Ollama (`embeddinggemma`, `qwen3:8b`), Diffusers, Amazon Lex V2 |
+| 인프라·배포 | Docker, Docker Compose, AWS |
+| 백테스트 | QuantConnect LEAN, Yahoo Finance Custom Data |
+
 ## NotebookLM - https://notebook.google.com/notebook/42560d11-3e03-4b66-890d-67d52d52ccca
 
 ## 1. Docker로 실행하기 (권장)
