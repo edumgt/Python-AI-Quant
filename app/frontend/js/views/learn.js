@@ -1783,7 +1783,7 @@ function installNpsHoldingsModal(root, docId) {
 }
 
 function installCapmSimulator(root, docId) {
-  const trigger = root.querySelector('[data-capm-simulator]'); if (docId !== '06' || !trigger) return;
+  const trigger = root.querySelector('[data-capm-simulator]'); if (docId !== '07' || !trigger) return;
   const modal = document.createElement('div');
   modal.className = 'capm-modal-backdrop'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-labelledby', 'capm-modal-title');
   modal.innerHTML = `<section class="capm-modal"><header><div><span><i class="fa-solid fa-calculator"></i></span><div><h2 id="capm-modal-title">CAPM 기대수익률 계산기</h2><p>무위험 이자율·시장 기대수익률·베타를 바꾸면 위험을 고려한 기대수익률이 어떻게 달라지는지 확인하세요.</p></div></div><button type="button" data-capm-close aria-label="계산기 닫기"><i class="fa-solid fa-xmark"></i></button></header><main><section class="capm-inputs"><label>무위험 이자율 (%)<input type="number" data-capm-input="riskFree" value="3" min="0" max="20" step="0.1"></label><label>시장 기대수익률 (%)<input type="number" data-capm-input="marketReturn" value="9" min="-20" max="30" step="0.1"></label><label>베타(β)<input type="number" data-capm-input="beta" value="1.2" min="-3" max="5" step="0.1"></label></section><section class="capm-results" aria-live="polite"><article><span>시장 위험 프리미엄</span><strong data-capm-output="premium"></strong></article><article><span>베타 반영 리스크 프리미엄</span><strong data-capm-output="weighted"></strong></article><article><span>CAPM 기대수익률</span><strong data-capm-output="expected"></strong></article></section><section class="capm-reading"><h3>계산을 이렇게 읽어 보세요</h3><p data-capm-reading></p><b data-capm-formula></b></section><footer><i class="fa-solid fa-circle-info"></i> CAPM 기대수익률은 위험 수준을 고려해 비교할 기준선일 뿐, 미래 수익을 맞히는 예언이 아닙니다.<button type="button" data-capm-reset>예시값으로 초기화</button></footer></main></section>`;
@@ -1814,7 +1814,7 @@ function installCapmSimulator(root, docId) {
 }
 
 function installBacktestSimulator(root, docId) {
-  const trigger = root.querySelector('[data-backtest-simulator]'); if (docId !== '07' || !trigger) return;
+  const trigger = root.querySelector('[data-backtest-simulator]'); if (docId !== '06' || !trigger) return;
   const modal = document.createElement('div'); modal.className = 'backtest-modal-backdrop'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-labelledby', 'backtest-title');
   modal.innerHTML = `<section class="backtest-modal"><header><div><span><i class="fa-solid fa-flask"></i></span><div><h2 id="backtest-title">쉬운 백테스트 연습기</h2><p>가상의 매매 결과를 바꾸며 수익률과 낙폭이 함께 움직이는 모습을 확인하세요.</p></div></div><button type="button" data-backtest-close aria-label="닫기"><i class="fa-solid fa-xmark"></i></button></header><main><div class="backtest-step"><b>STEP 1</b><span>매매 규칙의 결과를 입력해 보세요</span></div><section class="backtest-inputs"><label>시작 금액 (원)<input type="number" data-backtest="capital" value="1000000" min="10000" step="10000"></label><label>총 거래 횟수<input type="number" data-backtest="trades" value="20" min="1" max="100" step="1"></label><label>승률 (%)<input type="number" data-backtest="winRate" value="55" min="0" max="100" step="1"></label><label>이긴 거래 수익률 (%)<input type="number" data-backtest="win" value="4" min="0" step="0.1"></label><label>진 거래 손실률 (%)<input type="number" data-backtest="loss" value="3" min="0" step="0.1"></label><label>거래당 비용 (%)<input type="number" data-backtest="cost" value="0.2" min="0" step="0.05"></label></section><section class="backtest-results" aria-live="polite"><article><small>마지막 평가금액</small><strong data-backtest-out="final"></strong></article><article><small>전체 수익률</small><strong data-backtest-out="return"></strong></article><article><small>최대 낙폭 (MDD)</small><strong data-backtest-out="mdd"></strong></article><article><small>승 / 패</small><strong data-backtest-out="record"></strong></article></section><section class="backtest-chart-wrap"><canvas data-backtest-chart aria-label="가상 백테스트 자산 변화 그래프"></canvas></section><section class="backtest-reading"><h3>이 결과를 이렇게 읽어요</h3><p data-backtest-reading></p><p data-backtest-formula></p></section><footer><i class="fa-solid fa-circle-info"></i> 실제 백테스트는 날짜별 가격, 매매 시점, 세금, 슬리피지와 상장폐지 종목까지 반영해야 합니다. 이 화면은 지표의 뜻을 익히는 연습용입니다.<button type="button" data-backtest-reset>예시값으로 초기화</button></footer></main></section>`;
   document.body.appendChild(modal); const closeButton = modal.querySelector('[data-backtest-close]'); const canvas = modal.querySelector('[data-backtest-chart]'); let lastFocused = null;
@@ -1825,7 +1825,7 @@ function installBacktestSimulator(root, docId) {
 }
 
 function installSplitBuySimulator(root, docId) {
-  const trigger = root.querySelector('[data-split-buy-simulator]'); if (docId !== '06' || !trigger) return;
+  const trigger = root.querySelector('[data-split-buy-simulator]'); if (docId !== '07' || !trigger) return;
   const modal = document.createElement('div'); modal.className = 'split-buy-modal-backdrop'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-labelledby', 'split-buy-modal-title');
   modal.innerHTML = `<section class="split-buy-modal"><header><div><span><i class="fa-solid fa-layer-group"></i></span><div><h2 id="split-buy-modal-title">분할매수 평단 시뮬레이터</h2><p>여러 번에 나눠 살 때 평균 매수 단가(평단)가 어떻게 만들어지는지 확인해 보세요.</p></div></div><button type="button" data-split-buy-close aria-label="분할매수 시뮬레이터 닫기"><i class="fa-solid fa-xmark"></i></button></header><main><section class="split-buy-steps"><div class="split-buy-step"><label class="split-buy-toggle"><input type="checkbox" data-split-buy-enable="1" checked>1차</label><label>가격(원)<input type="number" data-split-buy-price="1" value="100000" min="0" step="1000"></label><label>투자금(원)<input type="number" data-split-buy-amount="1" value="400000" min="0" step="10000"></label></div><div class="split-buy-step"><label class="split-buy-toggle"><input type="checkbox" data-split-buy-enable="2" checked>2차</label><label>가격(원)<input type="number" data-split-buy-price="2" value="80000" min="0" step="1000"></label><label>투자금(원)<input type="number" data-split-buy-amount="2" value="400000" min="0" step="10000"></label></div><div class="split-buy-step"><label class="split-buy-toggle"><input type="checkbox" data-split-buy-enable="3" checked>3차</label><label>가격(원)<input type="number" data-split-buy-price="3" value="130000" min="0" step="1000"></label><label>투자금(원)<input type="number" data-split-buy-amount="3" value="400000" min="0" step="10000"></label></div><div class="split-buy-step"><label class="split-buy-toggle"><input type="checkbox" data-split-buy-enable="4">4차</label><label>가격(원)<input type="number" data-split-buy-price="4" value="110000" min="0" step="1000"></label><label>투자금(원)<input type="number" data-split-buy-amount="4" value="400000" min="0" step="10000"></label></div></section><label class="split-buy-now">현재가(원)<input type="number" data-split-buy-current value="80000" min="0" step="1000"></label><section class="split-buy-chart-wrap"><canvas data-split-buy-chart aria-label="매수 가격과 평단, 현재가의 위치를 보여주는 그래프"></canvas></section><div class="split-buy-table-wrap"><table class="split-buy-table"><thead><tr><th>차례</th><th>매수 가격</th><th>매수 수량</th><th>누적 투자금</th><th>누적 수량</th><th>평단</th></tr></thead><tbody data-split-buy-rows></tbody></table></div><section class="split-buy-summary" aria-live="polite"><article><span>총 투자금</span><strong data-split-buy-out="total"></strong></article><article><span>총 보유 수량</span><strong data-split-buy-out="qty"></strong></article><article><span>평단(평균 매수 단가)</span><strong data-split-buy-out="avg"></strong></article><article><span>현재가 대비 평가손익</span><strong data-split-buy-out="pl"></strong></article></section><p class="split-buy-reading" data-split-buy-reading></p></main><footer><i class="fa-solid fa-circle-info"></i> 소수점 이하 수량은 매수 시 자동으로 버려지며, 실제 평단은 수수료·세금·환전 비용에 따라 이 계산과 다를 수 있습니다.<button type="button" data-split-buy-reset>예시값으로 초기화</button></footer></section>`;
   document.body.appendChild(modal);
@@ -1870,7 +1870,7 @@ function installSplitBuySimulator(root, docId) {
 }
 
 function installDividendCalendarModal(root, docId) {
-  const trigger = root.querySelector('[data-dividend-calendar]'); if (docId !== '06' || !trigger) return;
+  const trigger = root.querySelector('[data-dividend-calendar]'); if (docId !== '07' || !trigger) return;
   const STOCKS = [
     { ticker: '005930.KS', name: '삼성전자' }, { ticker: '000660.KS', name: 'SK하이닉스' }, { ticker: '005380.KS', name: '현대차' },
     { ticker: '105560.KS', name: 'KB금융' }, { ticker: '005490.KS', name: 'POSCO홀딩스' },
@@ -1920,7 +1920,7 @@ function installDividendCalendarModal(root, docId) {
 }
 
 function installIpoChartModal(root, docId) {
-  const trigger = root.querySelector('[data-ipo-chart]'); if (docId !== '06' || !trigger) return;
+  const trigger = root.querySelector('[data-ipo-chart]'); if (docId !== '07' || !trigger) return;
   const STOCKS = [
     { ticker: '064400.KS', label: 'LG CNS' }, { ticker: 'VG', label: 'Venture Global' }, { ticker: 'CRWV', label: 'CoreWeave' },
     { ticker: 'CRCL', label: 'Circle' }, { ticker: 'CHYM', label: 'Chime' }, { ticker: 'FIG', label: 'Figma' },
@@ -1973,7 +1973,7 @@ function installIpoChartModal(root, docId) {
 }
 
 function installPennyStockRallyModal(root, docId) {
-  const trigger = root.querySelector('[data-penny-stock-rally]'); if (docId !== '06' || !trigger) return;
+  const trigger = root.querySelector('[data-penny-stock-rally]'); if (docId !== '07' || !trigger) return;
   const STOCKS = [
     { ticker: '005360.KS', label: '모나미' }, { ticker: '014710.KS', label: '사조씨푸드' }, { ticker: '008040.KS', label: '사조동아원' },
   ];
@@ -2023,7 +2023,7 @@ function installPennyStockRallyModal(root, docId) {
 }
 
 function installOrderSimulator(root, docId) {
-  const trigger = root.querySelector('[data-order-simulator]'); if (docId !== '06' || !trigger) return;
+  const trigger = root.querySelector('[data-order-simulator]'); if (docId !== '07' || !trigger) return;
   const modal = document.createElement('div'); modal.className = 'order-modal-backdrop'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
   modal.innerHTML = `<section class="order-modal"><header><div><i class="fa-solid fa-cart-shopping"></i><div><h2>주문창 시뮬레이터</h2><p>연습용 주문입니다. 실제 증권사 주문과 연결되지 않습니다.</p></div></div><button type="button" data-order-close aria-label="닫기"><i class="fa-solid fa-xmark"></i></button></header><main><section class="order-book"><b>삼성전자 <small>005930</small></b><span>매도 71,400원</span><strong>현재가 71,300원</strong><span>매수 71,200원</span></section><section class="order-inputs"><label>주문 구분<select data-order-input="type"><option value="limit">지정가</option><option value="market">시장가</option><option value="percent">기준가 대비 %</option></select></label><label>매수·매도<select data-order-input="side"><option value="buy">매수</option><option value="sell">매도</option></select></label><label>주문 수량<input type="number" data-order-input="quantity" value="10" min="1"></label><label data-order-price-label>주문 가격 (원)<input type="number" data-order-input="price" value="71200" min="1" step="100"></label></section><div class="order-quick"><button data-order-quick="-1">−1%</button><button data-order-quick="0">현재가</button><button data-order-quick="1">+1%</button></div><section class="order-result" aria-live="polite"><strong data-order-status></strong><p data-order-detail></p><dl><div><dt>예상 체결가</dt><dd data-order-price></dd></div><div><dt>체결 수량</dt><dd data-order-filled></dd></div><div><dt>미체결 수량</dt><dd data-order-unfilled></dd></div><div><dt>예상 주문금액</dt><dd data-order-total></dd></div></dl></section><footer><i class="fa-solid fa-circle-info"></i> 시장가는 호가 상황에 따라 예상보다 불리한 가격에 체결될 수 있습니다. 지정가 주문은 가격이 맞지 않으면 미체결로 남을 수 있습니다.</footer></main></section>`;
   document.body.appendChild(modal); const closeButton = modal.querySelector('[data-order-close]'); let lastFocused = null; const current = 71300; const format = (value) => `${Math.round(value).toLocaleString('ko-KR')}원`;
