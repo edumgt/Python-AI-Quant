@@ -1,0 +1,353 @@
+2026-08-07T07:34:25.4288748Z TRACE:: Engine.Main(): LEAN ALGORITHMIC TRADING ENGINE v2.5.0.0 Mode: DEBUG (64bit) Host: 65d192656fc0
+2026-08-07T07:34:25.4352616Z TRACE:: Engine.Main(): Started 7:34 AM
+2026-08-07T07:34:25.4668538Z TRACE:: JobQueue.NextJob(): Selected /module/HyundaiTrendBacktest.py
+2026-08-07T07:34:25.5211188Z TRACE:: AlgorithmManager.CreateTokenBucket(): Initializing LeakyBucket: Capacity: 120 RefillAmount: 18 TimeInterval: 1440
+2026-08-07T07:34:25.5323512Z TRACE:: Engine.Run(): Resource limits '0' CPUs. 2147483647 MB RAM.
+2026-08-07T07:34:25.5330760Z TRACE:: TextSubscriptionDataSourceReader.SetCacheSize(): Setting cache size to 71582788 items
+2026-08-07T07:34:26.2503006Z TRACE:: PythonInitializer.Initialize(): start...
+2026-08-07T07:34:26.5740515Z TRACE:: PythonInitializer.Initialize(): ended
+2026-08-07T07:34:26.5763032Z TRACE:: AlgorithmPythonWrapper(): Python version 3.11.14 (main, Oct 21 2025, 18:40:40) [GCC 11.2.0]: Importing python module HyundaiTrendBacktest
+2026-08-07T07:34:26.6230747Z TRACE:: AlgorithmPythonWrapper(): HyundaiTrendBacktest successfully imported.
+2026-08-07T07:34:26.6243923Z TRACE:: AlgorithmPythonWrapper(): Creating IAlgorithm instance.
+2026-08-07T07:34:28.3689553Z TRACE:: LocalObjectStore.Initialize(): Storage Root: /results/storage. StorageFileCount 10000. StorageLimit 10240MB. StoragePermissions Read=True Write=True Delete=True
+2026-08-07T07:34:28.3866710Z TRACE:: HistoryProviderManager.Initialize(): history providers [SubscriptionDataReaderHistoryProvider]
+2026-08-07T07:34:28.3911005Z TRACE:: BaseSetupHandler.Setup(LocalPlatform): UID: 0, PID: 0, Version: 2.5.0.0, Source: WebIDE
+2026-08-07T07:34:28.5821533Z TRACE:: WeightedWorkScheduler(): will use 16 workers and MaxWorkWeight is 400
+2026-08-07T07:34:28.5920652Z TRACE:: BaseSetupHandler.SetupCurrencyConversions():
+Account Type: Margin
+
+Symbol      Quantity    Conversion = Value in USD
+USD: $   100000000.00 @       1.00 = $100000000
+-------------------------------------------------
+CashBook Total Value:                $100000000
+
+2026-08-07T07:34:28.5948565Z TRACE:: Total margin information: TotalMarginUsed: 0.00, MarginRemaining: 100000000.00
+2026-08-07T07:34:28.5957762Z TRACE:: SetUp Backtesting: User: 0 ProjectId: 0 AlgoId: HyundaiTrendBacktest
+2026-08-07T07:34:28.5985025Z TRACE:: Dates: Start: 01/01/2026 End: 07/01/2026 Cash: ¤100,000,000.00 MaximumRuntime: 100.00:00:00 MaxOrders: 2147483647
+2026-08-07T07:34:28.6036187Z TRACE:: BacktestingResultHandler(): Sample Period Set: 65.52
+2026-08-07T07:34:28.6041484Z TRACE:: JOB HANDLERS:
+         DataFeed:             QuantConnect.Lean.Engine.DataFeeds.FileSystemDataFeed
+         Setup:                QuantConnect.Lean.Engine.Setup.BacktestingSetupHandler
+         RealTime:             QuantConnect.Lean.Engine.RealTime.BacktestingRealTimeHandler
+         Results:              QuantConnect.Lean.Engine.Results.BacktestingResultHandler
+         Transactions:         QuantConnect.Lean.Engine.TransactionHandlers.BacktestingTransactionHandler
+         Object Store:         QuantConnect.Lean.Engine.Storage.LocalObjectStore
+         History Provider:     QuantConnect.Lean.Engine.HistoricalData.HistoryProviderManager
+         Brokerage:            QuantConnect.Brokerages.Backtesting.BacktestingBrokerage
+         Data Provider:        QuantConnect.Lean.Engine.DataFeeds.DefaultDataProvider
+
+2026-08-07T07:34:28.6239851Z TRACE:: Event Name "Daily Sampling", scheduled to run.
+2026-08-07T07:34:28.6256696Z TRACE:: AlgorithmManager.Run(): Begin DataStream - Start: 1/1/2026 12:00:00 AM Stop: 7/1/2026 11:59:59 PM Time: 1/1/2026 12:00:00 AM Warmup: False
+2026-08-07T07:34:28.6372886Z TRACE:: Debug: 2026-01-01 00:00:00 Launching analysis for HyundaiTrendBacktest with LEAN Engine v2.5.0.0
+2026-08-07T07:34:28.8904005Z TRACE:: UniverseSelection.AddPendingInternalDataFeeds(): Adding internal benchmark data feed SPY,#0,SPY,Hour,TradeBar,Trade,Adjusted,OpenInterest,Internal
+2026-08-07T07:34:29.2952649Z TRACE:: Debug: 2026-04-01 20:00:00 Trend signal UP: close=487,500, SMA20=508,925, SMA60=485,608
+2026-08-07T07:34:29.3318413Z TRACE:: Synchronizer.GetEnumerator(): Exited thread.
+2026-08-07T07:34:29.3324830Z TRACE:: AlgorithmManager.Run(): Firing On End Of Algorithm...
+2026-08-07T07:34:29.3333309Z TRACE:: Engine.Run(): Exiting Algorithm Manager
+2026-08-07T07:34:29.3439564Z TRACE:: StopSafely(): Waiting for 'Isolator Thread' thread to stop...
+2026-08-07T07:34:29.3450500Z TRACE:: FileSystemDataFeed.Exit(): Start. Setting cancellation token...
+2026-08-07T07:34:29.3454739Z TRACE:: Debug: 2026-04-08 20:00:00 Trend signal DOWN: close=508,000, SMA20=495,100, SMA60=498,683
+2026-08-07T07:34:29.3455367Z TRACE:: Debug: 2026-05-04 20:00:00 Trend signal UP: close=539,000, SMA20=517,150, SMA60=515,033
+2026-08-07T07:34:29.3455480Z TRACE:: Debug: 2026-07-01 20:00:00 Trend signal DOWN: close=487,500, SMA20=583,350, SMA60=584,317
+2026-08-07T07:34:29.3455554Z TRACE:: Debug: 2026-07-01 20:00:00 Algorithm Id:(HyundaiTrendBacktest) completed in 0.73 seconds at 0k data points per second. Processing total of 122 data points.
+2026-08-07T07:34:29.3464289Z TRACE:: FileSystemDataFeed.Exit(): Exit Finished.
+2026-08-07T07:34:29.3465882Z TRACE:: BacktestingResultHandler.Exit(): starting...
+2026-08-07T07:34:29.3471406Z TRACE:: BacktestingResultHandler.Exit(): Saving logs...
+2026-08-07T07:34:29.3479714Z TRACE:: Debug: 2026-07-01 20:00:00 Your log was successfully created and can be retrieved from: /results/HyundaiTrendBacktest-log.txt
+2026-08-07T07:34:29.3479768Z TRACE:: StopSafely(): Waiting for 'Result Thread' thread to stop...
+2026-08-07T07:34:29.3480028Z TRACE:: BacktestingResultHandler.Run(): Ending Thread...
+2026-08-07T07:34:29.7324934Z TRACE:: 
+STATISTICS:: Total Orders 17
+STATISTICS:: Average Win 0.67%
+STATISTICS:: Average Loss -9.48%
+STATISTICS:: Compounding Annual Return -10.137%
+STATISTICS:: Drawdown 34.300%
+STATISTICS:: Expectancy -0.063
+STATISTICS:: Start Equity 100000000
+STATISTICS:: End Equity 94815500
+STATISTICS:: Net Profit -5.184%
+STATISTICS:: Sharpe Ratio -0.175
+STATISTICS:: Sortino Ratio -0.138
+STATISTICS:: Probabilistic Sharpe Ratio 16.079%
+STATISTICS:: Loss Rate 12%
+STATISTICS:: Win Rate 88%
+STATISTICS:: Profit-Loss Ratio 0.07
+STATISTICS:: Alpha 0
+STATISTICS:: Beta 0
+STATISTICS:: Annual Standard Deviation 0.363
+STATISTICS:: Annual Variance 0.132
+STATISTICS:: Information Ratio -0.024
+STATISTICS:: Tracking Error 0.363
+STATISTICS:: Treynor Ratio 0
+STATISTICS:: Total Fees $0.00
+STATISTICS:: Estimated Strategy Capacity $0
+STATISTICS:: Lowest Capacity Asset 005380.HyundaiDaily 2S
+STATISTICS:: Portfolio Turnover 2.12%
+STATISTICS:: Drawdown Recovery 14
+STATISTICS:: OrderListHash b5b89c62a51dc4ed2c5231c27b1704ad
+2026-08-07T07:34:29.7325525Z TRACE:: BacktestingResultHandler.SendAnalysisResult(): Processed final packet
+2026-08-07T07:34:29.7329340Z TRACE:: Engine.Run(): Disconnecting from brokerage...
+2026-08-07T07:34:29.7330204Z TRACE:: Engine.Run(): Disposing of setup handler...
+2026-08-07T07:34:29.7331170Z TRACE:: Engine.Main(): Analysis Completed and Results Posted.
+2026-08-07T07:34:29.7333413Z TRACE:: DataMonitor.Exit(): start...
+2026-08-07T07:34:29.7333901Z TRACE:: StopSafely(): Waiting for '' thread to stop...
+2026-08-07T07:34:29.7350230Z TRACE:: DataMonitor.GenerateReport():
+DATA USAGE:: Total data requests 4
+DATA USAGE:: Succeeded data requests 4
+DATA USAGE:: Failed data requests 0
+DATA USAGE:: Failed data requests percentage 0%
+DATA USAGE:: Total universe data requests 0
+DATA USAGE:: Succeeded universe data requests 0
+DATA USAGE:: Failed universe data requests 0
+DATA USAGE:: Failed universe data requests percentage 0%
+2026-08-07T07:34:29.7437755Z TRACE:: DataMonitor.Exit(): end
+2026-08-07T07:34:29.7485802Z TRACE:: Engine.Main(): Packet removed from queue: HyundaiTrendBacktest
+2026-08-07T07:34:29.7490396Z TRACE:: LeanEngineSystemHandlers.Dispose(): start...
+2026-08-07T07:34:29.7506659Z TRACE:: LeanEngineSystemHandlers.Dispose(): Disposed of system handlers.
+2026-08-07T07:34:29.7509458Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): start...
+2026-08-07T07:34:29.7511576Z TRACE:: LocalObjectStore.Dispose(): start...
+2026-08-07T07:34:29.7514260Z TRACE:: LocalObjectStore.Dispose(): end
+2026-08-07T07:34:29.7517631Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): Disposed of algorithm handlers.
+2026-08-07T07:34:29.7519680Z TRACE:: StopSafely(): Waiting for 'CpuPerformance' thread to stop...
+2026-08-07T07:34:29.7522897Z TRACE:: PythonInitializer.Shutdown(): start
+2026-08-07T07:34:29.7523545Z TRACE:: PythonInitializer.Shutdown(): calling engine shutdown...
+2026-08-07T07:34:31.0363000Z TRACE:: PythonInitializer.Shutdown(): ended
+2026-08-07T07:34:31.0366936Z TRACE:: Program.Main(): Exiting Lean...
+2026-08-07T07:35:35.6711377Z TRACE:: Engine.Main(): LEAN ALGORITHMIC TRADING ENGINE v2.5.0.0 Mode: DEBUG (64bit) Host: 3821e851cf7a
+2026-08-07T07:35:35.6771425Z TRACE:: Engine.Main(): Started 7:35 AM
+2026-08-07T07:35:35.7044979Z TRACE:: JobQueue.NextJob(): Selected /module/HyundaiTrendBacktest.py
+2026-08-07T07:35:35.7494398Z TRACE:: AlgorithmManager.CreateTokenBucket(): Initializing LeakyBucket: Capacity: 120 RefillAmount: 18 TimeInterval: 1440
+2026-08-07T07:35:35.7557927Z TRACE:: Engine.Run(): Resource limits '0' CPUs. 2147483647 MB RAM.
+2026-08-07T07:35:35.7563401Z TRACE:: TextSubscriptionDataSourceReader.SetCacheSize(): Setting cache size to 71582788 items
+2026-08-07T07:35:36.3190263Z TRACE:: PythonInitializer.Initialize(): start...
+2026-08-07T07:35:36.5547820Z TRACE:: PythonInitializer.Initialize(): ended
+2026-08-07T07:35:36.5561788Z TRACE:: AlgorithmPythonWrapper(): Python version 3.11.14 (main, Oct 21 2025, 18:40:40) [GCC 11.2.0]: Importing python module HyundaiTrendBacktest
+2026-08-07T07:35:36.5883219Z TRACE:: AlgorithmPythonWrapper(): HyundaiTrendBacktest successfully imported.
+2026-08-07T07:35:36.5894581Z TRACE:: AlgorithmPythonWrapper(): Creating IAlgorithm instance.
+2026-08-07T07:35:37.3856227Z TRACE:: LocalObjectStore.Initialize(): Storage Root: /results/storage. StorageFileCount 10000. StorageLimit 10240MB. StoragePermissions Read=True Write=True Delete=True
+2026-08-07T07:35:37.4017098Z TRACE:: HistoryProviderManager.Initialize(): history providers [SubscriptionDataReaderHistoryProvider]
+2026-08-07T07:35:37.4050687Z TRACE:: BaseSetupHandler.Setup(LocalPlatform): UID: 0, PID: 0, Version: 2.5.0.0, Source: WebIDE
+2026-08-07T07:35:37.5490889Z TRACE:: WeightedWorkScheduler(): will use 16 workers and MaxWorkWeight is 400
+2026-08-07T07:35:37.5596457Z TRACE:: BaseSetupHandler.SetupCurrencyConversions():
+Account Type: Margin
+
+Symbol      Quantity    Conversion = Value in USD
+USD: $   100000000.00 @       1.00 = $100000000
+-------------------------------------------------
+CashBook Total Value:                $100000000
+
+2026-08-07T07:35:37.5647589Z TRACE:: Total margin information: TotalMarginUsed: 0.00, MarginRemaining: 100000000.00
+2026-08-07T07:35:37.5678202Z TRACE:: SetUp Backtesting: User: 0 ProjectId: 0 AlgoId: HyundaiTrendBacktest
+2026-08-07T07:35:37.5710217Z TRACE:: Dates: Start: 01/01/2026 End: 06/30/2026 Cash: ¤100,000,000.00 MaximumRuntime: 100.00:00:00 MaxOrders: 2147483647
+2026-08-07T07:35:37.5758107Z TRACE:: BacktestingResultHandler(): Sample Period Set: 65.16
+2026-08-07T07:35:37.5767929Z TRACE:: JOB HANDLERS:
+         DataFeed:             QuantConnect.Lean.Engine.DataFeeds.FileSystemDataFeed
+         Setup:                QuantConnect.Lean.Engine.Setup.BacktestingSetupHandler
+         RealTime:             QuantConnect.Lean.Engine.RealTime.BacktestingRealTimeHandler
+         Results:              QuantConnect.Lean.Engine.Results.BacktestingResultHandler
+         Transactions:         QuantConnect.Lean.Engine.TransactionHandlers.BacktestingTransactionHandler
+         Object Store:         QuantConnect.Lean.Engine.Storage.LocalObjectStore
+         History Provider:     QuantConnect.Lean.Engine.HistoricalData.HistoryProviderManager
+         Brokerage:            QuantConnect.Brokerages.Backtesting.BacktestingBrokerage
+         Data Provider:        QuantConnect.Lean.Engine.DataFeeds.DefaultDataProvider
+
+2026-08-07T07:35:37.5930935Z TRACE:: Event Name "Daily Sampling", scheduled to run.
+2026-08-07T07:35:37.5972146Z TRACE:: AlgorithmManager.Run(): Begin DataStream - Start: 1/1/2026 12:00:00 AM Stop: 6/30/2026 11:59:59 PM Time: 11/1/2025 8:00:00 PM Warmup: True
+2026-08-07T07:35:37.6079917Z TRACE:: Debug: 2025-11-01 20:00:00 Launching analysis for HyundaiTrendBacktest with LEAN Engine v2.5.0.0
+2026-08-07T07:35:37.7759732Z TRACE:: UniverseSelection.AddPendingInternalDataFeeds(): Adding internal benchmark data feed SPY,#0,SPY,Hour,TradeBar,Trade,Adjusted,OpenInterest,Internal
+2026-08-07T07:35:38.0602784Z TRACE:: AlgorithmManager.Stream(): Subscriptions count before warm up: 1
+2026-08-07T07:35:38.1604736Z TRACE:: Debug: 2025-11-01 20:00:00 Algorithm starting warm up...
+2026-08-07T07:35:38.1733151Z TRACE:: AlgorithmManager.Run(): Subscriptions count after warm up: 1
+2026-08-07T07:35:38.2114852Z TRACE:: Debug: 2026-01-01 00:00:00 Algorithm finished warming up.
+2026-08-07T07:35:38.2618790Z TRACE:: Debug: 2026-01-28 19:00:00 Trend signal UP: close=492,500, SMA20=415,225, SMA60=324,150
+2026-08-07T07:35:38.3123528Z TRACE:: Debug: 2026-04-08 20:00:00 Trend signal DOWN: close=508,000, SMA20=495,100, SMA60=498,683
+2026-08-07T07:35:38.3124777Z TRACE:: Debug: 2026-05-04 20:00:00 Trend signal UP: close=539,000, SMA20=517,150, SMA60=515,033
+2026-08-07T07:35:38.3240761Z TRACE:: Synchronizer.GetEnumerator(): Exited thread.
+2026-08-07T07:35:38.3247163Z TRACE:: AlgorithmManager.Run(): Firing On End Of Algorithm...
+2026-08-07T07:35:38.3254284Z TRACE:: Engine.Run(): Exiting Algorithm Manager
+2026-08-07T07:35:38.3316502Z TRACE:: StopSafely(): Waiting for 'Isolator Thread' thread to stop...
+2026-08-07T07:35:38.3320781Z TRACE:: FileSystemDataFeed.Exit(): Start. Setting cancellation token...
+2026-08-07T07:35:38.3331960Z TRACE:: FileSystemDataFeed.Exit(): Exit Finished.
+2026-08-07T07:35:38.3333490Z TRACE:: BacktestingResultHandler.Exit(): starting...
+2026-08-07T07:35:38.3337379Z TRACE:: BacktestingResultHandler.Exit(): Saving logs...
+2026-08-07T07:35:38.3344916Z TRACE:: Debug: 2026-07-01 20:00:00 Trend signal DOWN: close=487,500, SMA20=583,350, SMA60=584,317
+2026-08-07T07:35:38.3344965Z TRACE:: StopSafely(): Waiting for 'Result Thread' thread to stop...
+2026-08-07T07:35:38.3345463Z TRACE:: Debug: 2026-07-01 20:00:00 Algorithm Id:(HyundaiTrendBacktest) completed in 0.75 seconds at 0k data points per second. Processing total of 163 data points.
+2026-08-07T07:35:38.3346201Z TRACE:: Debug: 2026-07-01 20:00:00 Your log was successfully created and can be retrieved from: /results/HyundaiTrendBacktest-log.txt
+2026-08-07T07:35:38.3346452Z TRACE:: BacktestingResultHandler.Run(): Ending Thread...
+2026-08-07T07:35:38.7615131Z TRACE:: 
+STATISTICS:: Total Orders 37
+STATISTICS:: Average Win 0.28%
+STATISTICS:: Average Loss -2.39%
+STATISTICS:: Compounding Annual Return -11.284%
+STATISTICS:: Drawdown 34.300%
+STATISTICS:: Expectancy -0.120
+STATISTICS:: Start Equity 100000000
+STATISTICS:: End Equity 94211000
+STATISTICS:: Net Profit -5.789%
+STATISTICS:: Sharpe Ratio 0.016
+STATISTICS:: Sortino Ratio 0.016
+STATISTICS:: Probabilistic Sharpe Ratio 20.199%
+STATISTICS:: Loss Rate 21%
+STATISTICS:: Win Rate 79%
+STATISTICS:: Profit-Loss Ratio 0.12
+STATISTICS:: Alpha 0
+STATISTICS:: Beta 0
+STATISTICS:: Annual Standard Deviation 0.537
+STATISTICS:: Annual Variance 0.289
+STATISTICS:: Information Ratio 0.118
+STATISTICS:: Tracking Error 0.537
+STATISTICS:: Treynor Ratio 0
+STATISTICS:: Total Fees $0.00
+STATISTICS:: Estimated Strategy Capacity $0
+STATISTICS:: Lowest Capacity Asset 005380.HyundaiDaily 2S
+STATISTICS:: Portfolio Turnover 2.18%
+STATISTICS:: Drawdown Recovery 87
+STATISTICS:: OrderListHash 22d06ec04493f1998a38fc05761e7d6e
+2026-08-07T07:35:38.7615870Z TRACE:: BacktestingResultHandler.SendAnalysisResult(): Processed final packet
+2026-08-07T07:35:38.7619486Z TRACE:: Engine.Run(): Disconnecting from brokerage...
+2026-08-07T07:35:38.7620622Z TRACE:: Engine.Run(): Disposing of setup handler...
+2026-08-07T07:35:38.7621534Z TRACE:: Engine.Main(): Analysis Completed and Results Posted.
+2026-08-07T07:35:38.7624514Z TRACE:: DataMonitor.Exit(): start...
+2026-08-07T07:35:38.7625214Z TRACE:: StopSafely(): Waiting for '' thread to stop...
+2026-08-07T07:35:38.7638512Z TRACE:: DataMonitor.GenerateReport():
+DATA USAGE:: Total data requests 5
+DATA USAGE:: Succeeded data requests 5
+DATA USAGE:: Failed data requests 0
+DATA USAGE:: Failed data requests percentage 0%
+DATA USAGE:: Total universe data requests 0
+DATA USAGE:: Succeeded universe data requests 0
+DATA USAGE:: Failed universe data requests 0
+DATA USAGE:: Failed universe data requests percentage 0%
+2026-08-07T07:35:38.7724377Z TRACE:: DataMonitor.Exit(): end
+2026-08-07T07:35:38.7799996Z TRACE:: Engine.Main(): Packet removed from queue: HyundaiTrendBacktest
+2026-08-07T07:35:38.7801284Z TRACE:: LeanEngineSystemHandlers.Dispose(): start...
+2026-08-07T07:35:38.7807302Z TRACE:: LeanEngineSystemHandlers.Dispose(): Disposed of system handlers.
+2026-08-07T07:35:38.7809551Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): start...
+2026-08-07T07:35:38.7811192Z TRACE:: LocalObjectStore.Dispose(): start...
+2026-08-07T07:35:38.7814229Z TRACE:: LocalObjectStore.Dispose(): end
+2026-08-07T07:35:38.7818335Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): Disposed of algorithm handlers.
+2026-08-07T07:35:38.7821355Z TRACE:: StopSafely(): Waiting for 'CpuPerformance' thread to stop...
+2026-08-07T07:35:38.7830710Z TRACE:: PythonInitializer.Shutdown(): start
+2026-08-07T07:35:38.7833231Z TRACE:: PythonInitializer.Shutdown(): calling engine shutdown...
+2026-08-07T07:35:40.4002589Z TRACE:: PythonInitializer.Shutdown(): ended
+2026-08-07T07:35:40.4004399Z TRACE:: Program.Main(): Exiting Lean...
+2026-08-07T07:36:09.9708134Z TRACE:: Engine.Main(): LEAN ALGORITHMIC TRADING ENGINE v2.5.0.0 Mode: DEBUG (64bit) Host: e9b49f5e183b
+2026-08-07T07:36:09.9813397Z TRACE:: Engine.Main(): Started 7:36 AM
+2026-08-07T07:36:10.0043732Z TRACE:: JobQueue.NextJob(): Selected /module/HyundaiTrendBacktest.py
+2026-08-07T07:36:10.0584733Z TRACE:: AlgorithmManager.CreateTokenBucket(): Initializing LeakyBucket: Capacity: 120 RefillAmount: 18 TimeInterval: 1440
+2026-08-07T07:36:10.0646043Z TRACE:: Engine.Run(): Resource limits '0' CPUs. 2147483647 MB RAM.
+2026-08-07T07:36:10.0650903Z TRACE:: TextSubscriptionDataSourceReader.SetCacheSize(): Setting cache size to 71582788 items
+2026-08-07T07:36:10.6718707Z TRACE:: PythonInitializer.Initialize(): start...
+2026-08-07T07:36:10.9031283Z TRACE:: PythonInitializer.Initialize(): ended
+2026-08-07T07:36:10.9045439Z TRACE:: AlgorithmPythonWrapper(): Python version 3.11.14 (main, Oct 21 2025, 18:40:40) [GCC 11.2.0]: Importing python module HyundaiTrendBacktest
+2026-08-07T07:36:10.9382686Z TRACE:: AlgorithmPythonWrapper(): HyundaiTrendBacktest successfully imported.
+2026-08-07T07:36:10.9394713Z TRACE:: AlgorithmPythonWrapper(): Creating IAlgorithm instance.
+2026-08-07T07:36:11.5025012Z TRACE:: LocalObjectStore.Initialize(): Storage Root: /results/storage. StorageFileCount 10000. StorageLimit 10240MB. StoragePermissions Read=True Write=True Delete=True
+2026-08-07T07:36:11.5192026Z TRACE:: HistoryProviderManager.Initialize(): history providers [SubscriptionDataReaderHistoryProvider]
+2026-08-07T07:36:11.5226117Z TRACE:: BaseSetupHandler.Setup(LocalPlatform): UID: 0, PID: 0, Version: 2.5.0.0, Source: WebIDE
+2026-08-07T07:36:11.6745547Z TRACE:: WeightedWorkScheduler(): will use 16 workers and MaxWorkWeight is 400
+2026-08-07T07:36:11.6898266Z TRACE:: BaseSetupHandler.SetupCurrencyConversions():
+Account Type: Margin
+
+Symbol      Quantity    Conversion = Value in USD
+USD: $   100000000.00 @       1.00 = $100000000
+-------------------------------------------------
+CashBook Total Value:                $100000000
+
+2026-08-07T07:36:11.6919012Z TRACE:: Total margin information: TotalMarginUsed: 0.00, MarginRemaining: 100000000.00
+2026-08-07T07:36:11.6923732Z TRACE:: SetUp Backtesting: User: 0 ProjectId: 0 AlgoId: HyundaiTrendBacktest
+2026-08-07T07:36:11.6947343Z TRACE:: Dates: Start: 01/01/2026 End: 06/30/2026 Cash: ¤100,000,000.00 MaximumRuntime: 100.00:00:00 MaxOrders: 2147483647
+2026-08-07T07:36:11.6988820Z TRACE:: BacktestingResultHandler(): Sample Period Set: 65.16
+2026-08-07T07:36:11.6993144Z TRACE:: JOB HANDLERS:
+         DataFeed:             QuantConnect.Lean.Engine.DataFeeds.FileSystemDataFeed
+         Setup:                QuantConnect.Lean.Engine.Setup.BacktestingSetupHandler
+         RealTime:             QuantConnect.Lean.Engine.RealTime.BacktestingRealTimeHandler
+         Results:              QuantConnect.Lean.Engine.Results.BacktestingResultHandler
+         Transactions:         QuantConnect.Lean.Engine.TransactionHandlers.BacktestingTransactionHandler
+         Object Store:         QuantConnect.Lean.Engine.Storage.LocalObjectStore
+         History Provider:     QuantConnect.Lean.Engine.HistoricalData.HistoryProviderManager
+         Brokerage:            QuantConnect.Brokerages.Backtesting.BacktestingBrokerage
+         Data Provider:        QuantConnect.Lean.Engine.DataFeeds.DefaultDataProvider
+
+2026-08-07T07:36:11.7157816Z TRACE:: Event Name "Daily Sampling", scheduled to run.
+2026-08-07T07:36:11.7183733Z TRACE:: AlgorithmManager.Run(): Begin DataStream - Start: 1/1/2026 12:00:00 AM Stop: 6/30/2026 11:59:59 PM Time: 10/2/2025 8:00:00 PM Warmup: True
+2026-08-07T07:36:11.7352370Z TRACE:: Debug: 2025-10-02 20:00:00 Launching analysis for HyundaiTrendBacktest with LEAN Engine v2.5.0.0
+2026-08-07T07:36:11.8850529Z TRACE:: UniverseSelection.AddPendingInternalDataFeeds(): Adding internal benchmark data feed SPY,#0,SPY,Hour,TradeBar,Trade,Adjusted,OpenInterest,Internal
+2026-08-07T07:36:12.1436476Z TRACE:: AlgorithmManager.Stream(): Subscriptions count before warm up: 1
+2026-08-07T07:36:12.2376823Z TRACE:: Debug: 2025-10-02 20:00:00 Algorithm starting warm up...
+2026-08-07T07:36:12.2439997Z TRACE:: AlgorithmManager.Run(): Subscriptions count after warm up: 1
+2026-08-07T07:36:12.2884733Z TRACE:: Debug: 2026-01-01 00:00:00 Algorithm finished warming up.
+2026-08-07T07:36:12.3389061Z TRACE:: Debug: 2026-01-05 19:00:00 Trend signal UP: close=304,500, SMA20=295,050, SMA60=270,317
+2026-08-07T07:36:12.3892135Z TRACE:: Debug: 2026-04-08 20:00:00 Trend signal DOWN: close=508,000, SMA20=495,100, SMA60=498,683
+2026-08-07T07:36:12.3892591Z TRACE:: Debug: 2026-05-04 20:00:00 Trend signal UP: close=539,000, SMA20=517,150, SMA60=515,033
+2026-08-07T07:36:12.3981890Z TRACE:: Synchronizer.GetEnumerator(): Exited thread.
+2026-08-07T07:36:12.3987995Z TRACE:: AlgorithmManager.Run(): Firing On End Of Algorithm...
+2026-08-07T07:36:12.3995276Z TRACE:: Engine.Run(): Exiting Algorithm Manager
+2026-08-07T07:36:12.4058405Z TRACE:: StopSafely(): Waiting for 'Isolator Thread' thread to stop...
+2026-08-07T07:36:12.4062631Z TRACE:: FileSystemDataFeed.Exit(): Start. Setting cancellation token...
+2026-08-07T07:36:12.4081743Z TRACE:: FileSystemDataFeed.Exit(): Exit Finished.
+2026-08-07T07:36:12.4083874Z TRACE:: BacktestingResultHandler.Exit(): starting...
+2026-08-07T07:36:12.4092751Z TRACE:: BacktestingResultHandler.Exit(): Saving logs...
+2026-08-07T07:36:12.4102713Z TRACE:: Debug: 2026-07-01 20:00:00 Trend signal DOWN: close=487,500, SMA20=583,350, SMA60=584,317
+2026-08-07T07:36:12.4102788Z TRACE:: StopSafely(): Waiting for 'Result Thread' thread to stop...
+2026-08-07T07:36:12.4103471Z TRACE:: Debug: 2026-07-01 20:00:00 Algorithm Id:(HyundaiTrendBacktest) completed in 0.70 seconds at 0k data points per second. Processing total of 180 data points.
+2026-08-07T07:36:12.4103642Z TRACE:: Debug: 2026-07-01 20:00:00 Your log was successfully created and can be retrieved from: /results/HyundaiTrendBacktest-log.txt
+2026-08-07T07:36:12.4104012Z TRACE:: BacktestingResultHandler.Run(): Ending Thread...
+2026-08-07T07:36:12.7505579Z TRACE:: 
+STATISTICS:: Total Orders 52
+STATISTICS:: Average Win 2.45%
+STATISTICS:: Average Loss -4.73%
+STATISTICS:: Compounding Annual Return 122.113%
+STATISTICS:: Drawdown 34.400%
+STATISTICS:: Expectancy 0.406
+STATISTICS:: Start Equity 100000000
+STATISTICS:: End Equity 148804000
+STATISTICS:: Net Profit 48.804%
+STATISTICS:: Sharpe Ratio 1.677
+STATISTICS:: Sortino Ratio 2.124
+STATISTICS:: Probabilistic Sharpe Ratio 53.411%
+STATISTICS:: Loss Rate 7%
+STATISTICS:: Win Rate 93%
+STATISTICS:: Profit-Loss Ratio 0.52
+STATISTICS:: Alpha 0
+STATISTICS:: Beta 0
+STATISTICS:: Annual Standard Deviation 0.633
+STATISTICS:: Annual Variance 0.4
+STATISTICS:: Information Ratio 1.764
+STATISTICS:: Tracking Error 0.633
+STATISTICS:: Treynor Ratio 0
+STATISTICS:: Total Fees $0.00
+STATISTICS:: Estimated Strategy Capacity $0
+STATISTICS:: Lowest Capacity Asset 005380.HyundaiDaily 2S
+STATISTICS:: Portfolio Turnover 2.19%
+STATISTICS:: Drawdown Recovery 87
+STATISTICS:: OrderListHash cab583dd4c85f545382e8c2a7d981082
+2026-08-07T07:36:12.7508558Z TRACE:: BacktestingResultHandler.SendAnalysisResult(): Processed final packet
+2026-08-07T07:36:12.7524253Z TRACE:: Engine.Run(): Disconnecting from brokerage...
+2026-08-07T07:36:12.7527456Z TRACE:: Engine.Run(): Disposing of setup handler...
+2026-08-07T07:36:12.7528378Z TRACE:: Engine.Main(): Analysis Completed and Results Posted.
+2026-08-07T07:36:12.7534469Z TRACE:: DataMonitor.Exit(): start...
+2026-08-07T07:36:12.7535875Z TRACE:: StopSafely(): Waiting for '' thread to stop...
+2026-08-07T07:36:12.7556567Z TRACE:: DataMonitor.GenerateReport():
+DATA USAGE:: Total data requests 5
+DATA USAGE:: Succeeded data requests 5
+DATA USAGE:: Failed data requests 0
+DATA USAGE:: Failed data requests percentage 0%
+DATA USAGE:: Total universe data requests 0
+DATA USAGE:: Succeeded universe data requests 0
+DATA USAGE:: Failed universe data requests 0
+DATA USAGE:: Failed universe data requests percentage 0%
+2026-08-07T07:36:12.7618322Z TRACE:: DataMonitor.Exit(): end
+2026-08-07T07:36:12.7686636Z TRACE:: Engine.Main(): Packet removed from queue: HyundaiTrendBacktest
+2026-08-07T07:36:12.7688144Z TRACE:: LeanEngineSystemHandlers.Dispose(): start...
+2026-08-07T07:36:12.7695572Z TRACE:: LeanEngineSystemHandlers.Dispose(): Disposed of system handlers.
+2026-08-07T07:36:12.7698255Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): start...
+2026-08-07T07:36:12.7700377Z TRACE:: LocalObjectStore.Dispose(): start...
+2026-08-07T07:36:12.7702852Z TRACE:: LocalObjectStore.Dispose(): end
+2026-08-07T07:36:12.7705119Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): Disposed of algorithm handlers.
+2026-08-07T07:36:12.7706688Z TRACE:: StopSafely(): Waiting for 'CpuPerformance' thread to stop...
+2026-08-07T07:36:12.7710076Z TRACE:: PythonInitializer.Shutdown(): start
+2026-08-07T07:36:12.7710830Z TRACE:: PythonInitializer.Shutdown(): calling engine shutdown...
+2026-08-07T07:36:14.3132190Z TRACE:: PythonInitializer.Shutdown(): ended
+2026-08-07T07:36:14.3134364Z TRACE:: Program.Main(): Exiting Lean...

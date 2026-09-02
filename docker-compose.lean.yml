@@ -1,0 +1,16 @@
+name: samsung-lean
+
+# 기존 웹앱 compose와 독립적인 LEAN 백테스트 실행 구성입니다.
+services:
+  samsung-backtest:
+    build:
+      context: ./lean-samsung
+    image: samsung-lean-module:local
+    environment:
+      # Yahoo Finance에서 내려받을 005930.KS 일봉 기간입니다.
+      SAMSUNG_START_DATE: ${SAMSUNG_START_DATE:-2024-01-01}
+      SAMSUNG_END_DATE: ${SAMSUNG_END_DATE:-2025-01-01}
+    volumes:
+      # LEAN 결과 JSON, 로그, 주문 CSV를 호스트에 보존합니다.
+      - ./lean-results:/results
+    restart: "no"

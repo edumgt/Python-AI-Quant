@@ -1,0 +1,43 @@
+name: Inspect stock-trade host
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -T 10 -H "$SSH_HOST" >> ~/.ssh/known_hosts
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Inspect deployment prerequisites
+        run: |
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" '
+            set -e
+            echo "== host =="
+            hostnamectl --static || hostname
+            echo "== docker =="
+            docker --version
+            docker compose version
+            echo "== containers =="
+            sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}\t{{.Status}}"
+            echo "== networks =="
+            sudo docker network ls --format "{{.Name}}" | sort
+            echo "== nginx sites =="
+            sudo ls -la /etc/nginx/sites-enabled
+            echo "== nginx config references =="
+            sudo nginx -T 2>/dev/null | grep -E "server_name|listen 443|st\.edumgt\.co\.kr|proxy_pass" || true
+          '
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}

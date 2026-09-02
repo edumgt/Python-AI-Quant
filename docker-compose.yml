@@ -1,0 +1,180 @@
+name: investment-analysis
+
+# 로컬 PC 실행용 구성입니다.
+# 운영 서버는 docker-compose.prod.yml을 사용합니다.
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: investment_backend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      MONGODB_URL: mongodb://mongo:27017
+      MONGODB_DB: ${MONGODB_DB:-investment_db}
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-investment_docs}
+      MEILI_URL: http://meilisearch:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-local-development-search-key-change-me}
+      RAG_EMBEDDING_PROVIDER: ${RAG_EMBEDDING_PROVIDER:-ollama}
+      RAG_EMBEDDING_URL: ${RAG_EMBEDDING_URL:-http://ollama:11434/api/embed}
+      RAG_EMBEDDING_MODEL: ${RAG_EMBEDDING_MODEL:-embeddinggemma}
+      RAG_EMBEDDING_TIMEOUT_SECONDS: ${RAG_EMBEDDING_TIMEOUT_SECONDS:-180}
+      RAG_LLM_BASE_URL: ${RAG_LLM_BASE_URL:-http://ollama:11434/v1}
+      RAG_LLM_API_KEY: ${RAG_LLM_API_KEY:-ollama}
+      RAG_LLM_MODEL: ${RAG_LLM_MODEL:-qwen3:8b}
+      RAG_LLM_TIMEOUT_SECONDS: ${RAG_LLM_TIMEOUT_SECONDS:-180}
+      DART_API_KEY: ${DART_API_KEY:-}
+      KOSIS_API_KEY: ${KOSIS_API_KEY:-}
+      BOK_API_KEY: ${BOK_API_KEY:-}
+      AWS_REGION: ${AWS_REGION:-}
+      LEX_BOT_ID: ${LEX_BOT_ID:-}
+      LEX_BOT_ALIAS_ID: ${LEX_BOT_ALIAS_ID:-}
+      LEX_LOCALE_ID: ${LEX_LOCALE_ID:-ko_KR}
+      AWS_PROFILE: ${AWS_PROFILE:-investment-analysis-lex}
+    volumes:
+      - ./docs:/app/docs:ro
+      # Lex 전용 최소권한 프로필을 읽기 전용으로 제공합니다.
+      - ${AWS_SHARED_CREDENTIALS_DIR:-/root/.aws}:/root/.aws:ro
+    depends_on:
+      mongo:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+      meilisearch:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  mongo:
+    image: mongo:7
+    container_name: investment_mongo
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGODB_DB:-investment_db}
+    volumes:
+      - investment_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:v1.13.4
+    container_name: investment_qdrant
+    restart: unless-stopped
+    ports:
+      - "${QDRANT_PORT:-6333}:6333"
+      - "${QDRANT_GRPC_PORT:-6334}:6334"
+    volumes:
+      - investment_qdrant_data:/qdrant/storage
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.15.2
+    container_name: investment_meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-local-development-search-key-change-me}
+    volumes:
+      - investment_meilisearch_data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:7700/health >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  # 문서가 포함된 이미지가 바뀔 때 전체 텍스트 검색 색인을 새로 만듭니다.
+  search-index:
+    image: investment-analysis-backend:latest
+    restart: "no"
+    environment:
+      MEILI_URL: http://meilisearch:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-local-development-search-key-change-me}
+    volumes:
+      - ./docs:/app/docs:ro
+    depends_on:
+      meilisearch:
+        condition: service_healthy
+    command: ["python", "/app/scripts/index_docs_meilisearch.py"]
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: investment_ollama
+    restart: unless-stopped
+    volumes:
+      - investment_ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  # 첫 실행 때 한 번만 모델을 내려받습니다.
+  # docker compose --profile ollama-init run --rm ollama-init
+  ollama-init:
+    profiles: ["ollama-init"]
+    # 앱 이미지를 빌드하지 않고 Ollama CLI로 모델을 내려받는다.
+    # Buildx가 없는 Docker 설치에서도 최초 모델 준비가 가능하다.
+    image: ollama/ollama:latest
+    restart: "no"
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-ec"]
+    command: ["ollama pull ${RAG_EMBEDDING_MODEL:-embeddinggemma} && ollama pull ${RAG_LLM_MODEL:-qwen3:8b}"]
+
+  # `docker compose --profile init up -d`로 첫 실행할 때 100문항을 적재합니다.
+  quiz-init:
+    profiles: ["init"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["sh", "-c", "curl --fail --request POST http://backend:8000/api/quiz/seed"]
+
+  # 문서를 변경한 뒤 `docker compose --profile tools run --rm docs-index`로 실행합니다.
+  docs-index:
+    profiles: ["tools"]
+    # backend가 사용하는 이미지를 재사용해 색인 시 별도 이미지 빌드를 피한다.
+    image: investment-analysis-backend:latest
+    restart: "no"
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-investment_docs}
+      RAG_EMBEDDING_PROVIDER: ${RAG_EMBEDDING_PROVIDER:-ollama}
+      RAG_EMBEDDING_URL: ${RAG_EMBEDDING_URL:-http://ollama:11434/api/embed}
+      RAG_EMBEDDING_MODEL: ${RAG_EMBEDDING_MODEL:-embeddinggemma}
+      RAG_EMBEDDING_TIMEOUT_SECONDS: ${RAG_EMBEDDING_TIMEOUT_SECONDS:-180}
+    volumes:
+      - ./docs:/app/docs:ro
+    depends_on:
+      qdrant:
+        condition: service_started
+      # 임베딩을 생성하므로 Qdrant뿐 아니라 Ollama와 임베딩 모델도 준비돼야 한다.
+      ollama:
+        condition: service_healthy
+    command: ["/app/scripts/upload_docs_to_qdrant.sh"]
+
+volumes:
+  investment_mongo_data:
+  investment_qdrant_data:
+  investment_ollama_data:
+  investment_meilisearch_data:

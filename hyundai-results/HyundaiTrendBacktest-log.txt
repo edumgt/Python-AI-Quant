@@ -1,0 +1,8 @@
+2025-10-02 20:00:00 Launching analysis for HyundaiTrendBacktest with LEAN Engine v2.5.0.0
+2025-10-02 20:00:00 Algorithm starting warm up...
+2026-01-01 00:00:00 Algorithm finished warming up.
+2026-01-05 19:00:00 Trend signal UP: close=304,500, SMA20=295,050, SMA60=270,317
+2026-04-08 20:00:00 Trend signal DOWN: close=508,000, SMA20=495,100, SMA60=498,683
+2026-05-04 20:00:00 Trend signal UP: close=539,000, SMA20=517,150, SMA60=515,033
+2026-07-01 20:00:00 Trend signal DOWN: close=487,500, SMA20=583,350, SMA60=584,317
+2026-07-01 20:00:00 Algorithm Id:(HyundaiTrendBacktest) completed in 0.70 seconds at 0k data points per second. Processing total of 180 data points.

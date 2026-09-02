@@ -1,0 +1,136 @@
+name: Deploy stock-coin-trade
+
+on:
+  workflow_dispatch: {}
+  repository_dispatch:
+    types: [stock-coin-trade-main-updated]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stock-coin-trade-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out stock-coin-trade source
+        uses: actions/checkout@v4
+        with:
+          repository: edumgt/stock-coin-trade
+          path: stock-coin-trade
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -T 10 -H "$SSH_HOST" >> ~/.ssh/known_hosts
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Upload application source
+        working-directory: stock-coin-trade
+        run: |
+          tar \
+            --exclude=.git \
+            --exclude=node_modules \
+            --exclude=__pycache__ \
+            -czf - . | ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" \
+            'sudo install -d -o "$(id -u)" -g "$(id -g)" /opt/stock-coin-trade && tar -xzf - -C /opt/stock-coin-trade'
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Configure application and Nginx
+        run: |
+          cat > /tmp/stock-trade.override.yml <<'EOF'
+          services:
+            python-backend:
+              environment:
+                SECRET_KEY: ${SECRET_KEY}
+                DB_HOST: ${DB_HOST}
+                DB_PORT: ${DB_PORT}
+                DB_NAME: ${DB_NAME}
+                DB_USER: ${DB_USER}
+                DB_PASSWORD: ${DB_PASSWORD}
+          EOF
+
+          cat > /tmp/st.edumgt.co.kr <<'EOF'
+          server {
+              listen 80;
+              server_name st.edumgt.co.kr;
+
+              location / {
+                  proxy_pass http://127.0.0.1:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+              }
+          }
+          EOF
+
+          umask 077
+          cat > /tmp/stock-trade-db.env <<EOF
+          # 동일 VPC 내부 연결에는 대상 서버(43.201.14.160)의 사설 IP를 사용한다.
+          DB_HOST=172.31.0.55
+          DB_PORT=3306
+          DB_NAME=mockinv
+          DB_USER=mockinv
+          DB_PASSWORD=${STOCK_TRADE_DB_PASSWORD}
+          EOF
+
+          scp -i ~/.ssh/deploy_key /tmp/stock-trade.override.yml "$SSH_USER@$SSH_HOST:/tmp/stock-trade.override.yml"
+          scp -i ~/.ssh/deploy_key /tmp/st.edumgt.co.kr "$SSH_USER@$SSH_HOST:/tmp/st.edumgt.co.kr"
+          scp -i ~/.ssh/deploy_key /tmp/stock-trade-db.env "$SSH_USER@$SSH_HOST:/tmp/stock-trade-db.env"
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" '
+            set -e
+            sudo install -m 644 /tmp/stock-trade.override.yml /opt/stock-coin-trade/docker-compose.prod.yml
+            if [ ! -f /opt/stock-coin-trade/.env ]; then
+              umask 077
+              printf "SECRET_KEY=%s\n" "$(openssl rand -hex 32)" > /opt/stock-coin-trade/.env
+            fi
+            sudo sed -i -e "/^COMPOSE_PROFILES=/d" -e "/^DB_HOST=/d" -e "/^DB_PORT=/d" -e "/^DB_NAME=/d" -e "/^DB_USER=/d" -e "/^DB_PASSWORD=/d" /opt/stock-coin-trade/.env
+            sudo cat /tmp/stock-trade-db.env | sudo tee -a /opt/stock-coin-trade/.env >/dev/null
+            sudo rm -f /tmp/stock-trade-db.env
+            sudo docker network inspect shared-net >/dev/null 2>&1 || sudo docker network create shared-net
+            cd /opt/stock-coin-trade
+            sudo docker compose -p stock-coin-trade -f docker-compose.yml -f docker-compose.prod.yml up -d --build --remove-orphans
+            sudo docker rm -f crypto-mock-mariadb >/dev/null 2>&1 || true
+            sudo install -m 644 /tmp/st.edumgt.co.kr /etc/nginx/sites-available/st.edumgt.co.kr
+            sudo ln -sfn /etc/nginx/sites-available/st.edumgt.co.kr /etc/nginx/sites-enabled/st.edumgt.co.kr
+            sudo nginx -t
+            sudo systemctl reload nginx
+          '
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          STOCK_TRADE_DB_PASSWORD: ${{ secrets.STOCK_TRADE_DB_PASSWORD }}
+
+      - name: Issue or renew HTTPS certificate
+        run: |
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" '
+            sudo apt-get update
+            sudo apt-get install -y certbot python3-certbot-nginx
+            sudo certbot --nginx -d st.edumgt.co.kr --redirect --non-interactive --agree-tos --email info@edumgt.co.kr
+          '
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Verify deployed service
+        run: |
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" '
+            curl --fail --silent --show-error http://127.0.0.1:3000/api/stocks/list >/dev/null
+            curl --fail --silent --show-error --resolve st.edumgt.co.kr:443:127.0.0.1 https://st.edumgt.co.kr/api/stocks/list >/dev/null
+          '
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}

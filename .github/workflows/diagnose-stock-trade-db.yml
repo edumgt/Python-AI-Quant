@@ -1,0 +1,35 @@
+name: Diagnose stock-coin-trade DB connection
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -T 10 -H "$SSH_HOST" >> ~/.ssh/known_hosts
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Inspect application and external DB connectivity
+        run: |
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" '
+            set -e
+            sudo docker compose -p stock-coin-trade -f /opt/stock-coin-trade/docker-compose.yml -f /opt/stock-coin-trade/docker-compose.prod.yml ps
+            echo "== backend logs =="
+            sudo docker compose -p stock-coin-trade -f /opt/stock-coin-trade/docker-compose.yml -f /opt/stock-coin-trade/docker-compose.prod.yml logs --tail=120 python-backend
+            echo "== external DB TCP =="
+            timeout 5 bash -c "</dev/tcp/43.201.14.160/3306" && echo reachable
+          '
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}

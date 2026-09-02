@@ -1,0 +1,16 @@
+name: hyundai-lean
+
+# 현대자동차 2026년 상반기 추세 신호 검증용 독립 LEAN 구성입니다.
+services:
+  hyundai-backtest:
+    build:
+      context: ./lean-hyundai
+    image: hyundai-lean-module:local
+    environment:
+      HYUNDAI_DATA_START_DATE: ${HYUNDAI_DATA_START_DATE:-2022-01-01}
+      HYUNDAI_DATA_END_DATE: ${HYUNDAI_DATA_END_DATE:-2026-07-01}
+      HYUNDAI_TEST_START_DATE: ${HYUNDAI_TEST_START_DATE:-2026-01-01}
+      HYUNDAI_TEST_END_DATE: ${HYUNDAI_TEST_END_DATE:-2026-07-01}
+    volumes:
+      - ./hyundai-results:/results
+    restart: "no"

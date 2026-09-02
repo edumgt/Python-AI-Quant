@@ -1,0 +1,52 @@
+name: Migrate stock-coin-trade MariaDB
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure application-server SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$APP_SSH_KEY" > ~/.ssh/app_deploy_key
+          chmod 600 ~/.ssh/app_deploy_key
+          ssh-keyscan -T 10 -H "$APP_SSH_HOST" >> ~/.ssh/known_hosts
+        env:
+          APP_SSH_KEY: ${{ secrets.SSH_KEY }}
+          APP_SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Copy MariaDB data to the external DB server
+        run: |
+          ssh -i ~/.ssh/app_deploy_key "$APP_SSH_USER@$APP_SSH_HOST" "STOCK_TRADE_DB_PASSWORD=$STOCK_TRADE_DB_PASSWORD bash -s" <<'REMOTE'
+            set -e
+            SOURCE_CONTAINER=$(sudo docker ps -q --filter label=com.docker.compose.service=mariadb | head -n 1)
+            test -n "$SOURCE_CONTAINER"
+            SOURCE_ROOT_PASSWORD=$(sudo docker inspect "$SOURCE_CONTAINER" --format "{{range .Config.Env}}{{println .}}{{end}}" | sed -n "s/^MARIADB_ROOT_PASSWORD=//p")
+            test -n "$SOURCE_ROOT_PASSWORD"
+            sudo docker exec -e MYSQL_PWD="$SOURCE_ROOT_PASSWORD" "$SOURCE_CONTAINER" \
+                mariadb-dump -uroot --single-transaction --routines --events --no-create-db mockinv \
+              | sudo docker run --rm -i --network host -e MYSQL_PWD="$STOCK_TRADE_DB_PASSWORD" mariadb:11.4 \
+                mariadb -h 172.31.0.55 -P 3306 -u mockinv mockinv
+          REMOTE
+        env:
+          APP_SSH_USER: ${{ secrets.SSH_USER }}
+          APP_SSH_HOST: ${{ secrets.SSH_HOST }}
+          STOCK_TRADE_DB_PASSWORD: ${{ secrets.STOCK_TRADE_DB_PASSWORD }}
+
+      - name: Verify migrated table counts
+        run: |
+          ssh -i ~/.ssh/app_deploy_key "$APP_SSH_USER@$APP_SSH_HOST" "STOCK_TRADE_DB_PASSWORD=$STOCK_TRADE_DB_PASSWORD bash -s" <<'REMOTE'
+            set -e
+            sudo docker run --rm --network host -e MYSQL_PWD="$STOCK_TRADE_DB_PASSWORD" mariadb:11.4 \
+              mariadb -N -h 172.31.0.55 -P 3306 -u mockinv mockinv -e \
+              "SELECT COUNT(*) AS members FROM member; SELECT COUNT(*) AS stock_positions FROM stock_position; SELECT COUNT(*) AS crypto_positions FROM hold_crypto;"
+          REMOTE
+        env:
+          APP_SSH_USER: ${{ secrets.SSH_USER }}
+          APP_SSH_HOST: ${{ secrets.SSH_HOST }}
+          STOCK_TRADE_DB_PASSWORD: ${{ secrets.STOCK_TRADE_DB_PASSWORD }}

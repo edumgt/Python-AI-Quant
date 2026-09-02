@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>4-1-rst 실습 로그 분석 리포트</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif; margin: 2rem; color:#1a1a1a; background:#fafafa; }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 2px solid #ddd; padding-bottom: .3rem; }
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0 1.5rem; background:#fff; }
+  th, td { border: 1px solid #ddd; padding: 6px 10px; font-size: .88rem; text-align: left; }
+  th { background: #f0f0f0; }
+  tr:nth-child(even) { background: #f9f9f9; }
+  .bad { color: #c0392b; font-weight: bold; }
+  .warn { color: #b8860b; }
+  .alert { color: #c0392b; font-weight: bold; }
+  .ok { color: #2e7d32; }
+  .meta { color: #666; font-size: .85rem; }
+  ul { font-size: .88rem; }
+  .resubmit { color: #ffffff; background:#c0392b; font-weight: bold; padding: 2px 8px; border-radius: 4px; }
+  .resubmit-banner { color: #ffffff; background:#c0392b; font-weight: bold; padding: 10px 14px; border-radius: 6px; }
+  tr.row-bad td { background: #fdecea; }
+  .copy-strong { color: #ffffff; background:#c0392b; font-weight: bold; padding: 1px 6px; border-radius: 4px; }
+  .copy-weak { color: #b8860b; font-weight: bold; }
+  .badge-company { display:inline-block; color:#fff; background:#2e7d32; font-size:.75rem; font-weight:bold; padding:1px 7px; border-radius: 10px; }
+  .radar-grid { display:flex; flex-wrap:wrap; gap:.6rem; margin: .8rem 0 1.5rem; }
+  .radar-btn { cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:6px; padding:8px 14px; font-size:.88rem; }
+  .radar-btn:hover { background:#f0f7f0; border-color:#2e7d32; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); align-items:center; justify-content:center; z-index:1000; }
+  .modal-box { background:#fff; padding:1.4rem 1.6rem; border-radius:10px; text-align:center; max-width:92vw; }
+  .modal-box h3 { margin:.2rem 0 .6rem; }
+  .close-btn { margin-top:.6rem; padding:6px 18px; border:none; background:#2e7d32; color:#fff; border-radius:5px; cursor:pointer; font-size:.85rem; }
+  .close-btn:hover { background:#245c26; }
+</style></head>
+<body>
+<h1>4-1-rst 실습 로그 분석 리포트</h1>
+<p class="meta">생성 시각: 2026-08-10 16:10:17 KST &nbsp;|&nbsp; 대상 파일: 17개</p>
+
+<h2>1. JSON 정합성 검사 (엄격 검증)</h2>
+<p class="resubmit-banner">⛔ 형식 오류로 다시제출이 필요한 파일: 김인조1.json, 김지현1.json, 손성찬1.json, 장석규1.json</p>
+<table>
+<tr><th>파일</th><th>엄격 JSON 검증</th><th>비고</th><th>타임스탬프 수</th><th>절단 의심</th><th>추출된 답안 필드 수</th></tr>
+<tr class=""><td>강민석1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>327</td><td>-</td><td>73</td></tr>
+<tr class="row-bad"><td>김인조1.json</td><td><span class="resubmit">❌ 다시제출 (Invalid control character at (line 1492, col 154))</span></td><td>복구됨(참고용)</td><td>244</td><td><span class="warn">⚠ 의심</span></td><td>0</td></tr>
+<tr class=""><td>김주미1.json</td><td><span class="ok">✅ 정상</span></td><td></td><td>168</td><td>-</td><td>32</td></tr>
+<tr class="row-bad"><td>김지현1.json</td><td><span class="resubmit">❌ 다시제출 (필수 키 누락(lessons/clicks/activeLesson))</span></td><td>복구됨(참고용)</td><td>0</td><td>-</td><td>0</td></tr>
+<tr class=""><td>박정록1.json</td><td><span class="ok">✅ 정상</span></td><td></td><td>306</td><td>-</td><td>65</td></tr>
+<tr class="row-bad"><td>손성찬1.json</td><td><span class="resubmit">❌ 다시제출 (Extra data (line 1263, col 1))</span></td><td>복구됨(참고용)</td><td>181</td><td><span class="warn">⚠ 의심</span></td><td>17</td></tr>
+<tr class=""><td>신장환1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>84</td><td>-</td><td>37</td></tr>
+<tr class=""><td>오준영1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>548</td><td>-</td><td>63</td></tr>
+<tr class=""><td>오태환1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>85</td><td>-</td><td>76</td></tr>
+<tr class=""><td>이동원1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>416</td><td>-</td><td>55</td></tr>
+<tr class=""><td>이상하1.json</td><td><span class="ok">✅ 정상</span></td><td></td><td>153</td><td>-</td><td>29</td></tr>
+<tr class=""><td>이세현1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>158</td><td>-</td><td>49</td></tr>
+<tr class=""><td>임영채1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>387</td><td>-</td><td>49</td></tr>
+<tr class="row-bad"><td>장석규1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="resubmit">❌ 다시제출 (Expecting value (line 1, col 1))</span></td><td>복구됨(참고용)</td><td>212</td><td>-</td><td>50</td></tr>
+<tr class=""><td>정혜윤1.json</td><td><span class="ok">✅ 정상</span></td><td></td><td>184</td><td>-</td><td>39</td></tr>
+<tr class=""><td>최광석1.json</td><td><span class="ok">✅ 정상</span></td><td></td><td>226</td><td>-</td><td>37</td></tr>
+<tr class=""><td>황석준1.json <span class="badge-company">🏢 기업선정함</span></td><td><span class="ok">✅ 정상</span></td><td></td><td>285</td><td>-</td><td>48</td></tr>
+</table>
+
+<h2>2. 평균 클릭 간격 랭킹 (짧은 순)</h2>
+<table>
+<tr><th>순위</th><th>파일</th><th>평균 간격</th><th>클릭 수</th><th>총 소요시간</th><th>비고</th></tr>
+<tr><td>1</td><td>박정록1.json</td><td>1.41초</td><td>306</td><td>7.2분</td><td></td></tr>
+<tr><td>2</td><td>장석규1.json</td><td>3.93초</td><td>212</td><td>13.8분</td><td></td></tr>
+<tr><td>3</td><td>임영채1.json</td><td>4.21초</td><td>387</td><td>27.1분</td><td></td></tr>
+<tr><td>4</td><td>오준영1.json</td><td>5.69초</td><td>548</td><td>51.8분</td><td></td></tr>
+<tr><td>5</td><td>이동원1.json</td><td>6.09초</td><td>416</td><td>42.2분</td><td></td></tr>
+<tr><td>6</td><td>손성찬1.json</td><td>8.49초</td><td>181</td><td>25.5분</td><td><span class="warn">⚠ 절단 의심 데이터</span></td></tr>
+<tr><td>7</td><td>최광석1.json</td><td>8.79초</td><td>226</td><td>33.0분</td><td></td></tr>
+<tr><td>8</td><td>이상하1.json</td><td>8.99초</td><td>153</td><td>22.8분</td><td></td></tr>
+<tr><td>9</td><td>강민석1.json</td><td>11.45초</td><td>327</td><td>62.2분</td><td></td></tr>
+<tr><td>10</td><td>정혜윤1.json</td><td>14.45초</td><td>184</td><td>44.1분</td><td></td></tr>
+<tr><td>11</td><td>신장환1.json</td><td>14.49초</td><td>84</td><td>20.0분</td><td></td></tr>
+<tr><td>12</td><td>오태환1.json</td><td>16.86초</td><td>85</td><td>23.6분</td><td></td></tr>
+<tr><td>13</td><td>황석준1.json</td><td>19.43초</td><td>285</td><td>92.0분</td><td></td></tr>
+<tr><td>14</td><td>김주미1.json</td><td>20.03초</td><td>168</td><td>55.8분</td><td></td></tr>
+<tr><td>15</td><td>김인조1.json</td><td>33.11초</td><td>244</td><td>134.1분</td><td><span class="warn">⚠ 절단 의심 데이터</span></td></tr>
+<tr><td>16</td><td>이세현1.json</td><td>49.66초</td><td>158</td><td>129.9분</td><td></td></tr>
+</table>
+<p class="meta">랭킹 제외(타임스탬프 부족): <li>김지현1.json</li></p>
+
+<h2>3. 답안 유사도 - 숫자형 필드 (참고용, 5점 척도라 우연 일치 가능성 높음)</h2>
+<table>
+<tr><th>파일 A</th><th>파일 B</th><th>Jaccard</th><th>공통필드 일치율</th><th>일치/공통(전체)</th></tr>
+<tr><td>박정록1.json</td><td>오태환1.json</td><td>0.51</td><td>0.61</td><td>39/64 (전체 77)</td></tr>
+<tr><td>강민석1.json</td><td>오태환1.json</td><td>0.48</td><td>0.51</td><td>37/72 (전체 77)</td></tr>
+<tr><td>강민석1.json</td><td>박정록1.json</td><td>0.38</td><td>0.48</td><td>29/61 (전체 77)</td></tr>
+<tr><td>오태환1.json</td><td>최광석1.json</td><td>0.36</td><td>0.73</td><td>27/37 (전체 76)</td></tr>
+<tr><td>강민석1.json</td><td>오준영1.json</td><td>0.34</td><td>0.40</td><td>25/63 (전체 73)</td></tr>
+<tr><td>오태환1.json</td><td>임영채1.json</td><td>0.34</td><td>0.53</td><td>26/49 (전체 76)</td></tr>
+<tr><td>강민석1.json</td><td>임영채1.json</td><td>0.33</td><td>0.49</td><td>24/49 (전체 73)</td></tr>
+<tr><td>오준영1.json</td><td>오태환1.json</td><td>0.32</td><td>0.40</td><td>25/62 (전체 77)</td></tr>
+<tr><td>오태환1.json</td><td>황석준1.json</td><td>0.32</td><td>0.53</td><td>25/47 (전체 77)</td></tr>
+<tr><td>박정록1.json</td><td>최광석1.json</td><td>0.32</td><td>0.67</td><td>22/33 (전체 69)</td></tr>
+<tr><td>임영채1.json</td><td>최광석1.json</td><td>0.30</td><td>0.57</td><td>17/30 (전체 56)</td></tr>
+<tr><td>강민석1.json</td><td>최광석1.json</td><td>0.30</td><td>0.59</td><td>22/37 (전체 73)</td></tr>
+<tr><td>박정록1.json</td><td>임영채1.json</td><td>0.29</td><td>0.50</td><td>21/42 (전체 72)</td></tr>
+<tr><td>오준영1.json</td><td>임영채1.json</td><td>0.28</td><td>0.38</td><td>18/47 (전체 65)</td></tr>
+<tr><td>박정록1.json</td><td>오준영1.json</td><td>0.26</td><td>0.39</td><td>20/51 (전체 77)</td></tr>
+<tr><td>오준영1.json</td><td>최광석1.json</td><td>0.24</td><td>0.47</td><td>16/34 (전체 66)</td></tr>
+<tr><td>이상하1.json</td><td>최광석1.json</td><td>0.23</td><td>0.43</td><td>10/23 (전체 43)</td></tr>
+<tr><td>오태환1.json</td><td>이세현1.json</td><td>0.22</td><td>0.35</td><td>17/49 (전체 76)</td></tr>
+<tr><td>오준영1.json</td><td>황석준1.json</td><td>0.22</td><td>0.29</td><td>14/48 (전체 63)</td></tr>
+<tr><td>강민석1.json</td><td>이동원1.json</td><td>0.22</td><td>0.29</td><td>16/55 (전체 73)</td></tr>
+</table>
+
+<h2>4. 답안 유사도 - 서술형 필드 (표절 의심 판단 기준)</h2>
+
+        <p class="alert">⛔ 유사도 0.85 이상 + 작성 시각상 뒤에 제출된 표절 의심 사례 1건 포함. "표절 의심 강함" 항목을 우선 검토하세요.</p>
+        <table>
+          <tr><th>파일 A</th><th>파일 B</th><th>필드</th><th>유사도</th><th>답변 A</th><th>답변 B</th><th>작성 선후관계</th></tr>
+          <tr><td>신장환1.json</td><td>오태환1.json</td><td>technical-practice::technical:company</td><td>0.89</td><td>삼성전자/005930/KOSPI</td><td>삼성전자 / 005930 / KOSPI</td><td><span class="copy-strong">⛔ 신장환1.json가 오태환1.json 제출(02:32:21) 이후(02:36:49)에 거의 동일 문구 작성 → 표절 의심 강함</span></td></tr>
+<tr><td>신장환1.json</td><td>이세현1.json</td><td>technical-practice::technical:company</td><td>0.83</td><td>삼성전자/005930/KOSPI</td><td>삼성전자(005930), KOSPI</td><td><span class="copy-weak">△ 이세현1.json가 신장환1.json보다 나중에 작성(02:36:49 → 02:49:05)</span></td></tr>
+<tr><td>오태환1.json</td><td>이세현1.json</td><td>technical-practice::technical:company</td><td>0.80</td><td>삼성전자 / 005930 / KOSPI</td><td>삼성전자(005930), KOSPI</td><td><span class="copy-weak">△ 이세현1.json가 오태환1.json보다 나중에 작성(02:32:21 → 02:49:05)</span></td></tr>
+<tr><td>오준영1.json</td><td>오태환1.json</td><td>technical-practice::technical:company</td><td>0.74</td><td>삼성중공업 / 010140 / KOSPI</td><td>삼성전자 / 005930 / KOSPI</td><td><span class="copy-weak">△ 오태환1.json가 오준영1.json보다 나중에 작성(02:04:59 → 02:32:21)</span></td></tr>
+<tr><td>신장환1.json</td><td>오준영1.json</td><td>technical-practice::technical:company</td><td>0.62</td><td>삼성전자/005930/KOSPI</td><td>삼성중공업 / 010140 / KOSPI</td><td><span class="copy-weak">△ 신장환1.json가 오준영1.json보다 나중에 작성(02:04:59 → 02:36:49)</span></td></tr>
+<tr><td>강민석1.json</td><td>오준영1.json</td><td>technical-practice::technical:source</td><td>0.60</td><td>https://www.tradingview.com/x/7D33clSL/</td><td>일봉 / https://kr.tradingview.com/symbols/KRX-010140/</td><td><span class="copy-weak">△ 강민석1.json가 오준영1.json보다 나중에 작성(02:04:59 → 02:12:21)</span></td></tr>
+        </table>
+        <p class="meta">※ 작성 선후관계는 각 파일의 마지막 클릭 타임스탬프(제출 완료 시각)를 기준으로 추정한 것으로, 참고용 정황 증거입니다.</p>
+        
+
+<h2>5. 개인별 6대 역량 방사형 차트</h2>
+<p class="meta">카테고리: 거시경제 / 산업분석 / 재무제표 / 밸류에이션 / 기업실습 / 기술적분석 — 이름을 클릭하면 모달로 방사형 차트가 열립니다.</p>
+
+    <div class="radar-grid"><button class="radar-btn" onclick="document.getElementById('radar-modal-0').style.display='flex'">📊 강민석1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-1').style.display='flex'">📊 김인조1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-2').style.display='flex'">📊 김주미1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-3').style.display='flex'">📊 김지현1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-4').style.display='flex'">📊 박정록1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-5').style.display='flex'">📊 손성찬1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-6').style.display='flex'">📊 신장환1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-7').style.display='flex'">📊 오준영1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-8').style.display='flex'">📊 오태환1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-9').style.display='flex'">📊 이동원1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-10').style.display='flex'">📊 이상하1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-11').style.display='flex'">📊 이세현1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-12').style.display='flex'">📊 임영채1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-13').style.display='flex'">📊 장석규1.json <span class="badge-company">🏢 기업선정함</span></button><button class="radar-btn" onclick="document.getElementById('radar-modal-14').style.display='flex'">📊 정혜윤1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-15').style.display='flex'">📊 최광석1.json</button><button class="radar-btn" onclick="document.getElementById('radar-modal-16').style.display='flex'">📊 황석준1.json <span class="badge-company">🏢 기업선정함</span></button></div>
+    
+        <div id="radar-modal-0" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>강민석1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 66.7,97.7" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-0').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-1" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>김인조1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,140.0 140.0,140.0 140.0,140.0 140.0,140.0 140.0,140.0 140.0,140.0" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-1').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-2" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>김주미1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,72.5 176.7,118.8 227.3,190.4 140.0,140.0 78.0,175.8 140.0,140.0" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-2').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-3" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>김지현1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,140.0 140.0,140.0 140.0,140.0 140.0,140.0 140.0,140.0 140.0,140.0" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-3').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-4" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>박정록1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,39.2 227.3,89.6 195.9,172.3 140.0,240.8 140.0,140.0 52.7,89.6" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-4').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-5" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>손성찬1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,81.5 183.6,114.8 140.0,140.0 140.0,140.0 140.0,140.0 129.5,134.0" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-5').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-6" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>신장환1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,97.7 154.8,131.4 227.3,190.4 140.0,157.1 78.0,175.8 105.1,119.8" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-6').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-7" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>오준영1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,72.5 227.3,89.6 227.3,190.4 140.0,173.3 52.7,190.4 73.7,101.7" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-7').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-8" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>오태환1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-8').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-9" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>이동원1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,47.3 205.5,102.2 227.3,190.4 140.0,223.7 52.7,190.4 112.1,123.9" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-9').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-10" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>이상하1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,64.4 183.6,114.8 227.3,190.4 140.0,140.0 140.0,140.0 140.0,140.0" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-10').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-11" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>이세현1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,89.6 205.5,102.2 227.3,190.4 140.0,173.3 52.7,190.4 101.6,117.8" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-11').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-12" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>임영채1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,64.4 227.3,89.6 165.3,154.6 140.0,173.3 52.7,190.4 87.6,109.8" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-12').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-13" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>장석규1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,64.4 190.6,110.8 227.3,190.4 140.0,190.4 52.7,190.4 105.1,119.8" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-13').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-14" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>정혜윤1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,89.6 183.6,114.8 227.3,190.4 140.0,223.7 78.0,175.8 129.5,134.0" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-14').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-15" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>최광석1.json</h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,72.5 198.5,106.2 195.9,172.3 140.0,207.5 90.2,168.7 126.0,131.9" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-15').style.display='none'">닫기</button>
+          </div>
+        </div>
+        <div id="radar-modal-16" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+          <div class="modal-box">
+            <h3>황석준1.json <span class="badge-company">🏢 기업선정함</span></h3>
+            <svg width="280" height="280" viewBox="0 0 280 280">
+      <polygon points="140.0,119.8 157.5,129.9 157.5,150.1 140.0,160.2 122.5,150.1 122.5,129.9" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,99.7 174.9,119.8 174.9,160.2 140.0,180.3 105.1,160.2 105.1,119.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,79.5 192.4,109.8 192.4,170.2 140.0,200.5 87.6,170.2 87.6,109.8" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,59.4 209.8,99.7 209.8,180.3 140.0,220.6 70.2,180.3 70.2,99.7" fill="none" stroke="#e0e0e0" stroke-width="1"/><polygon points="140.0,39.2 227.3,89.6 227.3,190.4 140.0,240.8 52.7,190.4 52.7,89.6" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      <line x1="140.0" y1="140.0" x2="140.0" y2="39.2" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="89.6" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="227.3" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="140.0" y2="240.8" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="190.4" stroke="#ccc" stroke-width="1"/><line x1="140.0" y1="140.0" x2="52.7" y2="89.6" stroke="#ccc" stroke-width="1"/>
+      <polygon points="140.0,75.5 192.4,109.8 204.6,177.3 140.0,183.3 86.7,170.7 106.0,120.3" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="140.0,72.5 176.7,118.8 227.3,190.4 140.0,173.3 78.0,175.8 94.6,113.8" fill="#2e7d32" fill-opacity="0.28" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140.0" y="11.2" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">거시경제</text><text x="251.5" y="75.6" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">산업분석</text><text x="251.5" y="204.4" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#444">재무제표</text><text x="140.0" y="268.8" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="#444">밸류에이션</text><text x="28.5" y="204.4" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기업실습</text><text x="28.5" y="75.6" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#444">기술적분석</text>
+    </svg>
+            <p class="meta">실선(초록)=본인, 점선(회색)=반 평균. 각 축은 카테고리 내 최다 참여 학생 대비 %.</p>
+            <button class="close-btn" onclick="document.getElementById('radar-modal-16').style.display='none'">닫기</button>
+          </div>
+        </div>
+    
+
+</body></html>

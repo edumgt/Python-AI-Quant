@@ -1,0 +1,30 @@
+name: Configure iv.edumgt.co.kr HTTPS
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  configure-https:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -T 10 -H "$SSH_HOST" >> ~/.ssh/known_hosts
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Install certificate and HTTPS virtual host
+        run: |
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" 'sudo apt-get update && sudo apt-get install -y certbot python3-certbot-nginx && sudo rm -f /etc/nginx/sites-enabled/iv.edumgt.co.kr /etc/nginx/sites-available/iv.edumgt.co.kr && sudo nginx -t && sudo systemctl reload nginx && sudo certbot --nginx -d iv.edumgt.co.kr --redirect --non-interactive --agree-tos --email info@edumgt.co.kr && curl --fail --silent --show-error --resolve iv.edumgt.co.kr:443:127.0.0.1 https://iv.edumgt.co.kr/api/health'
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}

@@ -1,0 +1,24 @@
+fastapi
+uvicorn[standard]
+orjson
+python-multipart
+python-dotenv
+requests
+boto3
+motor
+pymongo
+
+# 데이터·시장 조회와 차트 생성
+numpy
+pandas
+openpyxl
+yfinance
+pykrx
+matplotlib
+
+# 백엔드 라우터의 분석·이미지 처리 기능
+scikit-learn
+scipy
+torch
+diffusers
+opencv-python

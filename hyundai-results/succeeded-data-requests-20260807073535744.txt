@@ -1,0 +1,5 @@
+/hyundai.csv
+/hyundai.csv
+/equity/usa/daily/spy.zip
+/equity/usa/hour/spy.zip
+/alternative/interest-rate/usa/interest-rate.csv
