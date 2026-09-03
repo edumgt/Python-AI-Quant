@@ -25,6 +25,13 @@ LEAN_RUNS: dict[str, dict[str, Any]] = {
         "strategy_name": "이동평균 추세추종 (20일선 vs 60일선)",
         "strategy_note": "20일 이동평균이 60일 이동평균 위에 있으면 매수, 아래로 내려오면 전량 매도하는 추세추종 전략입니다.",
     },
+    "samsung-em": {
+        "label": "삼성전기",
+        "code": "009150",
+        "summary_path": ROOT_DIR / "samsung-em-results" / "SamsungEMBuyAndHold-summary.json",
+        "strategy_name": "매수 후 보유(Buy & Hold)",
+        "strategy_note": "동작 확인용 스모크 테스트입니다. 첫 거래일에 1주를 매수한 뒤 추가 매매 없이 그대로 보유합니다.",
+    },
 }
 
 
@@ -61,7 +68,7 @@ def list_lean_backtests() -> dict[str, Any]:
 def get_lean_backtest(symbol: str) -> dict[str, Any]:
     meta = LEAN_RUNS.get(symbol)
     if not meta:
-        raise HTTPException(status_code=404, detail="지원하지 않는 종목입니다. hyundai 또는 samsung을 사용하세요.")
+        raise HTTPException(status_code=404, detail="지원하지 않는 종목입니다. hyundai, samsung, samsung-em 중 하나를 사용하세요.")
 
     data = _load_summary(meta["summary_path"])
     config = data.get("algorithmConfiguration", {})

@@ -10,5 +10,9 @@ python3 /module/download_samsung_data.py \
 
 cp /module/config.json /results/config.json
 cd /results
+dotnet /Lean/Launcher/bin/Debug/QuantConnect.Lean.Launcher.dll
 
-exec dotnet /Lean/Launcher/bin/Debug/QuantConnect.Lean.Launcher.dll
+python3 /module/render_report.py \
+  --result /results/SamsungBuyAndHold.json \
+  --output /results/samsung-report.html \
+  --label "삼성전자" --code "005930.KS" --series-name "Samsung Electronics"

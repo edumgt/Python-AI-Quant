@@ -3,6 +3,7 @@ import { api } from '../api.js';
 const TABS = [
   { symbol: 'hyundai', label: '현대자동차 (005380)' },
   { symbol: 'samsung', label: '삼성전자 (005930)' },
+  { symbol: 'samsung-em', label: '삼성전기 (009150)' },
 ];
 
 const STAT_CARDS = [
@@ -84,7 +85,7 @@ function renderResult(target, data) {
       <canvas data-quant-chart aria-label="LEAN 백테스트 자산 변화 곡선"></canvas>
     </div>
     <p style="margin:16px 0 0; padding:11px 12px; background:rgba(250,204,21,.08); border:1px solid rgba(250,204,21,.35); border-radius:9px; color:#fbbf24; font-size:.75rem; line-height:1.55;">
-      <i class="fa-solid fa-circle-info"></i> 이 결과는 QuantConnect LEAN 엔진으로 미리 실행해 둔 백테스트 산출물(<code>lean-hyundai</code>/<code>lean-samsung</code> 및 그 결과 폴더)을 그대로 보여 주는 학습용 자료입니다. 실시간 시세가 아니며, 실제 매매 수수료·세금·슬리피지·상장폐지 등을 모두 반영하지 않았으므로 투자 판단의 근거로 사용하지 마세요.
+      <i class="fa-solid fa-circle-info"></i> 이 결과는 QuantConnect LEAN 엔진으로 미리 실행해 둔 백테스트 산출물(<code>lean-hyundai</code>/<code>lean-samsung</code>/<code>lean-samsung-electro-mechanics</code> 및 그 결과 폴더)을 그대로 보여 주는 학습용 자료입니다. 실시간 시세가 아니며, 실제 매매 수수료·세금·슬리피지·상장폐지 등을 모두 반영하지 않았으므로 투자 판단의 근거로 사용하지 마세요.
     </p>`;
   drawEquityCurve(target.querySelector('[data-quant-chart]'), data.equity_curve || []);
   window.addEventListener('resize', () => drawEquityCurve(target.querySelector('[data-quant-chart]'), data.equity_curve || []));
@@ -106,7 +107,7 @@ export function quantView(container) {
     <div style="margin-bottom:24px;">
       <h1 style="font-size:1.25rem; font-weight:700; color:var(--text); margin-bottom:6px;"><i class="fa-solid fa-chart-simple"></i> Quant · LEAN 백테스트 리포트</h1>
       <p style="font-size:0.875rem; color:#94a3b8; line-height:1.6;">
-        QuantConnect LEAN 엔진으로 실행한 현대자동차·삼성전자 백테스트 결과를 확인합니다.
+        QuantConnect LEAN 엔진으로 실행한 현대자동차·삼성전자·삼성전기 백테스트 결과를 확인합니다.
       </p>
     </div>
     <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:20px; border-bottom:1px solid #334155;">

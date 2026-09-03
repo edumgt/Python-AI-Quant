@@ -64,7 +64,7 @@
 ### 인프라·배포
 - **Docker Compose**로 로컬에서 앱·MongoDB·Qdrant·Ollama·Meilisearch 전체 스택을 실행합니다.
 - **AWS 운영 환경**은 별도 `docker-compose.prod.yml`을 사용하며 Ollama 없이 해시 임베딩으로 동작합니다.
-- **QuantConnect LEAN** 기반 백테스트(삼성전자 매수·보유, 현대차 이동평균 추세추종)는 앱과 독립된 별도 Compose 구성(`docker-compose.lean.yml`, `docker-compose.hd.yaml`)으로 실행하며, 결과는 `lean-results/`·`hyundai-results/`에 저장되어 앱의 Quant 메뉴에서 조회합니다.
+- **QuantConnect LEAN** 기반 백테스트(삼성전자·삼성전기 매수·보유, 현대차 이동평균 추세추종)는 앱과 독립된 별도 Compose 구성(`docker-compose.lean.yml`, `docker-compose.hd.yaml`)으로 실행하며, 결과는 `lean-results/`·`samsung-em-results/`·`hyundai-results/`에 저장되어 앱의 Quant 메뉴에서 조회합니다.
 
 ## NotebookLM - https://notebook.google.com/notebook/42560d11-3e03-4b66-890d-67d52d52ccca
 
@@ -117,8 +117,34 @@ SAMSUNG_START_DATE=2023-01-01 SAMSUNG_END_DATE=2024-01-01 \
   docker compose -f docker-compose.lean.yml run --rm samsung-backtest
 ```
 
+실행이 끝나면 `lean-results/samsung-report.html`에서 종가·포트폴리오 자산 추이,
+월별 등락률, 체결 내역, LEAN 엔진 통계를 정리한 리포트를 확인할 수 있습니다
+(현대차 리포트와 같은 형식).
+
 전략과 Dockerfile은 [lean-samsung/](lean-samsung/)에 있습니다. 이 구성은 Custom
 Data 기반의 동작 예제이므로 KRX 수수료·배당·거래일·환율 모델을 포함하지 않습니다.
+
+## 삼성전기 LEAN 백테스트 (별도 Compose 구성)
+
+웹앱과 독립적으로 QuantConnect LEAN 기반 삼성전기(`009150.KS`) 일봉 예제를
+실행할 수 있습니다. 실행 이미지에는 전략 모듈이 포함되며, 컨테이너가 시작할 때
+공개 가격 데이터를 받은 뒤 한 번의 백테스트를 수행합니다.
+
+```bash
+docker compose -f docker-compose.lean.yml run --rm samsung-em-backtest
+```
+
+결과 파일과 `orders.csv`는 `samsung-em-results/`에 생성됩니다. 기본 기간은
+2024년이며, 다른 기간을 지정하려면 다음처럼 실행합니다.
+
+```bash
+SAMSUNG_EM_START_DATE=2023-01-01 SAMSUNG_EM_END_DATE=2024-01-01 \
+  docker compose -f docker-compose.lean.yml run --rm samsung-em-backtest
+```
+
+전략과 Dockerfile은 [lean-samsung-electro-mechanics/](lean-samsung-electro-mechanics/)에
+있습니다. 이 구성은 삼성전자 모듈과 동일한 방식의 Custom Data 기반 동작 예제이므로
+KRX 수수료·배당·거래일·환율 모델을 포함하지 않습니다.
 
 ## 현대자동차 LEAN 추세 신호 검증 (별도 Compose 구성)
 

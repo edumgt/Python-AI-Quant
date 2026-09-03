@@ -1,0 +1,113 @@
+2026-09-03T00:18:43.2632687Z TRACE:: Engine.Main(): LEAN ALGORITHMIC TRADING ENGINE v2.5.0.0 Mode: DEBUG (64bit) Host: 207a0ec1ec51
+2026-09-03T00:18:43.2991910Z TRACE:: Engine.Main(): Started 12:18 AM
+2026-09-03T00:18:43.3486256Z TRACE:: JobQueue.NextJob(): Selected /module/SamsungEMBuyAndHold.py
+2026-09-03T00:18:43.4179100Z TRACE:: AlgorithmManager.CreateTokenBucket(): Initializing LeakyBucket: Capacity: 120 RefillAmount: 18 TimeInterval: 1440
+2026-09-03T00:18:43.4306662Z TRACE:: Engine.Run(): Resource limits '0' CPUs. 2147483647 MB RAM.
+2026-09-03T00:18:43.4313781Z TRACE:: TextSubscriptionDataSourceReader.SetCacheSize(): Setting cache size to 71582788 items
+2026-09-03T00:18:44.0815419Z TRACE:: PythonInitializer.Initialize(): start...
+2026-09-03T00:18:44.3737975Z TRACE:: PythonInitializer.Initialize(): ended
+2026-09-03T00:18:44.3750674Z TRACE:: AlgorithmPythonWrapper(): Python version 3.11.14 (main, Oct 21 2025, 18:40:40) [GCC 11.2.0]: Importing python module SamsungEMBuyAndHold
+2026-09-03T00:18:44.4019087Z TRACE:: AlgorithmPythonWrapper(): SamsungEMBuyAndHold successfully imported.
+2026-09-03T00:18:44.4031001Z TRACE:: AlgorithmPythonWrapper(): Creating IAlgorithm instance.
+2026-09-03T00:18:47.0557827Z TRACE:: LocalObjectStore.Initialize(): Storage Root: /results/storage. StorageFileCount 10000. StorageLimit 10240MB. StoragePermissions Read=True Write=True Delete=True
+2026-09-03T00:18:47.0705546Z TRACE:: HistoryProviderManager.Initialize(): history providers [SubscriptionDataReaderHistoryProvider]
+2026-09-03T00:18:47.0740558Z TRACE:: BaseSetupHandler.Setup(LocalPlatform): UID: 0, PID: 0, Version: 2.5.0.0, Source: WebIDE
+2026-09-03T00:18:47.2585911Z TRACE:: WeightedWorkScheduler(): will use 12 workers and MaxWorkWeight is 400
+2026-09-03T00:18:47.2672903Z TRACE:: BaseSetupHandler.SetupCurrencyConversions():
+Account Type: Margin
+
+Symbol      Quantity    Conversion = Value in USD
+USD: $     1000000.00 @       1.00 = $1000000
+-------------------------------------------------
+CashBook Total Value:                $1000000
+
+2026-09-03T00:18:47.2694207Z TRACE:: Total margin information: TotalMarginUsed: 0.00, MarginRemaining: 1000000.00
+2026-09-03T00:18:47.2699498Z TRACE:: SetUp Backtesting: User: 0 ProjectId: 0 AlgoId: SamsungEMBuyAndHold
+2026-09-03T00:18:47.2719041Z TRACE:: Dates: Start: 01/01/2024 End: 01/01/2025 Cash: ¤1,000,000.00 MaximumRuntime: 100.00:00:00 MaxOrders: 2147483647
+2026-09-03T00:18:47.2765256Z TRACE:: BacktestingResultHandler(): Sample Period Set: 132.12
+2026-09-03T00:18:47.2770289Z TRACE:: JOB HANDLERS:
+         DataFeed:             QuantConnect.Lean.Engine.DataFeeds.FileSystemDataFeed
+         Setup:                QuantConnect.Lean.Engine.Setup.BacktestingSetupHandler
+         RealTime:             QuantConnect.Lean.Engine.RealTime.BacktestingRealTimeHandler
+         Results:              QuantConnect.Lean.Engine.Results.BacktestingResultHandler
+         Transactions:         QuantConnect.Lean.Engine.TransactionHandlers.BacktestingTransactionHandler
+         Object Store:         QuantConnect.Lean.Engine.Storage.LocalObjectStore
+         History Provider:     QuantConnect.Lean.Engine.HistoricalData.HistoryProviderManager
+         Brokerage:            QuantConnect.Brokerages.Backtesting.BacktestingBrokerage
+         Data Provider:        QuantConnect.Lean.Engine.DataFeeds.DefaultDataProvider
+
+2026-09-03T00:18:47.2953396Z TRACE:: Event Name "Daily Sampling", scheduled to run.
+2026-09-03T00:18:47.2973362Z TRACE:: AlgorithmManager.Run(): Begin DataStream - Start: 1/1/2024 12:00:00 AM Stop: 1/1/2025 11:59:59 PM Time: 1/1/2024 12:00:00 AM Warmup: False
+2026-09-03T00:18:47.3322457Z TRACE:: Debug: 2024-01-01 00:00:00 Launching analysis for SamsungEMBuyAndHold with LEAN Engine v2.5.0.0
+2026-09-03T00:18:47.4038619Z TRACE:: UniverseSelection.AddPendingInternalDataFeeds(): Adding internal benchmark data feed SPY,#0,SPY,Hour,TradeBar,Trade,Adjusted,OpenInterest,Internal
+2026-09-03T00:18:47.9999210Z TRACE:: Debug: 2024-01-02 19:00:00 Samsung Electro-Mechanics buy test: 158,100
+2026-09-03T00:18:48.0401123Z TRACE:: Synchronizer.GetEnumerator(): Exited thread.
+2026-09-03T00:18:48.0409440Z TRACE:: AlgorithmManager.Run(): Firing On End Of Algorithm...
+2026-09-03T00:18:48.0416826Z TRACE:: Engine.Run(): Exiting Algorithm Manager
+2026-09-03T00:18:48.0478067Z TRACE:: OrderRequestProcessingPool.Dispose(): completed
+2026-09-03T00:18:48.0484833Z TRACE:: StopSafely(): Waiting for 'Isolator Thread' thread to stop...
+2026-09-03T00:18:48.0489281Z TRACE:: FileSystemDataFeed.Exit(): Start. Setting cancellation token...
+2026-09-03T00:18:48.0501711Z TRACE:: Debug: 2024-12-30 19:00:00 Algorithm Id:(SamsungEMBuyAndHold) completed in 0.77 seconds at 0k data points per second. Processing total of 245 data points.
+2026-09-03T00:18:48.0504196Z TRACE:: FileSystemDataFeed.Exit(): Exit Finished.
+2026-09-03T00:18:48.0507573Z TRACE:: BacktestingResultHandler.Exit(): starting...
+2026-09-03T00:18:48.0510141Z TRACE:: BacktestingResultHandler.Exit(): Saving logs...
+2026-09-03T00:18:48.0518571Z TRACE:: Debug: 2024-12-30 19:00:00 Your log was successfully created and can be retrieved from: /results/SamsungEMBuyAndHold-log.txt
+2026-09-03T00:18:48.0518649Z TRACE:: StopSafely(): Waiting for 'Result Thread' thread to stop...
+2026-09-03T00:18:48.0518957Z TRACE:: BacktestingResultHandler.Run(): Ending Thread...
+2026-09-03T00:18:48.7025492Z TRACE:: 
+STATISTICS:: Total Orders 1
+STATISTICS:: Average Win 0%
+STATISTICS:: Average Loss 0%
+STATISTICS:: Compounding Annual Return -3.432%
+STATISTICS:: Drawdown 6.600%
+STATISTICS:: Expectancy 0
+STATISTICS:: Start Equity 1000000
+STATISTICS:: End Equity 965700
+STATISTICS:: Net Profit -3.430%
+STATISTICS:: Sharpe Ratio -1.904
+STATISTICS:: Sortino Ratio -2.422
+STATISTICS:: Probabilistic Sharpe Ratio 0.032%
+STATISTICS:: Loss Rate 0%
+STATISTICS:: Win Rate 0%
+STATISTICS:: Profit-Loss Ratio 0
+STATISTICS:: Alpha 0
+STATISTICS:: Beta 0
+STATISTICS:: Annual Standard Deviation 0.041
+STATISTICS:: Annual Variance 0.002
+STATISTICS:: Information Ratio -0.562
+STATISTICS:: Tracking Error 0.041
+STATISTICS:: Treynor Ratio 0
+STATISTICS:: Total Fees $0.00
+STATISTICS:: Estimated Strategy Capacity $0
+STATISTICS:: Lowest Capacity Asset 009150.SamsungEMDaily 2S
+STATISTICS:: Portfolio Turnover 0.04%
+STATISTICS:: Drawdown Recovery 93
+STATISTICS:: OrderListHash e7f18d533e4534697f63be57d10a1156
+2026-09-03T00:18:48.7026173Z TRACE:: BacktestingResultHandler.SendAnalysisResult(): Processed final packet
+2026-09-03T00:18:48.7030464Z TRACE:: Engine.Run(): Disconnecting from brokerage...
+2026-09-03T00:18:48.7031503Z TRACE:: Engine.Run(): Disposing of setup handler...
+2026-09-03T00:18:48.7032333Z TRACE:: Engine.Main(): Analysis Completed and Results Posted.
+2026-09-03T00:18:48.7034742Z TRACE:: DataMonitor.Exit(): start...
+2026-09-03T00:18:48.7035429Z TRACE:: StopSafely(): Waiting for '' thread to stop...
+2026-09-03T00:18:48.7048533Z TRACE:: DataMonitor.GenerateReport():
+DATA USAGE:: Total data requests 4
+DATA USAGE:: Succeeded data requests 4
+DATA USAGE:: Failed data requests 0
+DATA USAGE:: Failed data requests percentage 0%
+DATA USAGE:: Total universe data requests 0
+DATA USAGE:: Succeeded universe data requests 0
+DATA USAGE:: Failed universe data requests 0
+DATA USAGE:: Failed universe data requests percentage 0%
+2026-09-03T00:18:48.7161678Z TRACE:: DataMonitor.Exit(): end
+2026-09-03T00:18:48.7386900Z TRACE:: Engine.Main(): Packet removed from queue: SamsungEMBuyAndHold
+2026-09-03T00:18:48.7397539Z TRACE:: LeanEngineSystemHandlers.Dispose(): start...
+2026-09-03T00:18:48.7419568Z TRACE:: LeanEngineSystemHandlers.Dispose(): Disposed of system handlers.
+2026-09-03T00:18:48.7427280Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): start...
+2026-09-03T00:18:48.7439253Z TRACE:: LocalObjectStore.Dispose(): start...
+2026-09-03T00:18:48.7447049Z TRACE:: LocalObjectStore.Dispose(): end
+2026-09-03T00:18:48.7454337Z TRACE:: LeanEngineAlgorithmHandlers.Dispose(): Disposed of algorithm handlers.
+2026-09-03T00:18:48.7461241Z TRACE:: StopSafely(): Waiting for 'CpuPerformance' thread to stop...
+2026-09-03T00:18:48.7466540Z TRACE:: PythonInitializer.Shutdown(): start
+2026-09-03T00:18:48.7467118Z TRACE:: PythonInitializer.Shutdown(): calling engine shutdown...
+2026-09-03T00:18:51.2661967Z TRACE:: PythonInitializer.Shutdown(): ended
+2026-09-03T00:18:51.2663867Z TRACE:: Program.Main(): Exiting Lean...
