@@ -71,6 +71,8 @@ def classify_vocab_related(fp):
         return None
 
     record = _as_single_record(parsed)
+    if record and record.get("_report_status") and {"name", "region", "answers"} <= record.keys():
+        return ("incomplete", record)
     if (
         record
         and VOCAB_REQUIRED_KEYS <= record.keys()
@@ -96,9 +98,9 @@ def load_provenance():
         return {}
 
 
-def render_grading_section(vocab_records, questions):
+def render_grading_section(vocab_records, incomplete_records, questions):
     """1. 성적 레포트: 응시자별 점수와 오답 상세(선택/정답)."""
-    if not vocab_records:
+    if not vocab_records and not incomplete_records:
         return '<p class="meta">단어장 시험 제출 형식(name/region/answers/submitted_at)의 파일이 없습니다.</p>'
     if not questions:
         return '<p class="warn">⚠ docs/voca-exam.md 문제지를 찾을 수 없거나 형식이 달라 채점할 수 없습니다.</p>'
@@ -122,6 +124,12 @@ def render_grading_section(vocab_records, questions):
             f"<tr><td>{name}</td><td>{region}</td>"
             f"<td>{score}/{len(questions)}</td><td>{detail}</td></tr>"
         )
+
+    for _, rec in sorted(incomplete_records.items(), key=lambda kv: kv[1].get("name") or kv[0]):
+        name = html.escape(str(rec.get("name", "-")))
+        region = html.escape(str(rec.get("region", "-")))
+        reason = html.escape(str(rec.get("_report_status", "채점할 수 없는 제출")))
+        rows.append(f"<tr><td>{name}</td><td>{region}</td><td>채점 불가</td><td>{reason}</td></tr>")
 
     return f"""
     <table>
@@ -194,7 +202,7 @@ def render_exception_collection_section(other_items, provenance):
     return "\n".join(blocks)
 
 
-def render_html(vocab_records, other_items, questions, provenance, generated_at):
+def render_html(vocab_records, incomplete_records, other_items, questions, provenance, generated_at):
     return f"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <title>4-2-rst 단어장 시험 채점 리포트</title>
@@ -213,10 +221,10 @@ def render_html(vocab_records, other_items, questions, provenance, generated_at)
 </style></head>
 <body>
 <h1>4-2-rst 단어장 시험 채점 리포트</h1>
-<p class="meta">생성 시각: {generated_at} &nbsp;|&nbsp; 응시자 {len(vocab_records)}명 &nbsp;|&nbsp; 예외 파일 {len(other_items)}개</p>
+<p class="meta">생성 시각: {generated_at} &nbsp;|&nbsp; 응시자 {len(vocab_records) + len(incomplete_records)}명 &nbsp;|&nbsp; 예외 파일 {len(other_items)}개</p>
 
 <h2>1. 성적 레포트</h2>
-{render_grading_section(vocab_records, questions)}
+{render_grading_section(vocab_records, incomplete_records, questions)}
 
 <h2>2. 문항 컬렉션</h2>
 {render_question_collection_section(questions)}
@@ -234,6 +242,7 @@ def main():
     )
 
     vocab_records = {}
+    incomplete_records = {}
     other_items = {}
     unclassified = []
     for fp in files:
@@ -242,17 +251,22 @@ def main():
             unclassified.append(os.path.basename(fp))
             continue
         kind, data = classified
-        (vocab_records if kind == "vocab" else other_items)[os.path.basename(fp)] = data
+        if kind == "vocab":
+            vocab_records[os.path.basename(fp)] = data
+        elif kind == "incomplete":
+            incomplete_records[os.path.basename(fp)] = data
+        else:
+            other_items[os.path.basename(fp)] = data
 
     questions = load_vocab_questions()
     provenance = load_provenance()
     generated_at = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
-    html_out = render_html(vocab_records, other_items, questions, provenance, generated_at)
+    html_out = render_html(vocab_records, incomplete_records, other_items, questions, provenance, generated_at)
 
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write(html_out)
 
-    msg = f"[analyze_report] 성적 레포트 {len(vocab_records)}명 / 예외 컬렉션 {len(other_items)}개 -> {REPORT_PATH}"
+    msg = f"[analyze_report] 성적 레포트 {len(vocab_records)}명 + 채점 불가 {len(incomplete_records)}명 / 예외 컬렉션 {len(other_items)}개 -> {REPORT_PATH}"
     if unclassified:
         msg += f" (인식 불가로 제외: {', '.join(unclassified)})"
     print(msg)

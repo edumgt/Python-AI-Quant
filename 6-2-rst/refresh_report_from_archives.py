@@ -5,6 +5,7 @@ import json
 import re
 import shutil
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -40,23 +41,47 @@ def submission_from_archive(path):
 
 
 def timestamp_value(value):
-    """일반 ISO 문자열과 Mongo Extended JSON의 $date를 같은 기준으로 비교한다."""
+    """일반 ISO 문자열과 Mongo Extended JSON의 $date를 UTC 시각으로 비교한다."""
     if isinstance(value, dict):
-        return str(value.get("$date", ""))
-    return str(value)
+        value = value.get("$date", "")
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc).isoformat()
+    except ValueError:
+        return str(value)
+
+
+def inferred_submitter(archive_name):
+    """파일명에서 회차/수정 표기를 제외한 제출자명을 복구한다."""
+    stem = Path(archive_name).stem
+    return re.sub(r"(?:[. ]?2)?(?:[-_ ]?수정)?$", "", stem)
 
 
 def main():
     latest = {}
     skipped = []
-    for archive in sorted(DIR.glob("*.zip*")):
-        record = submission_from_archive(archive)
+    incomplete = {}
+    # Zone.Identifier 같은 메타데이터 파일은 ZIP이 아니므로 정확한 확장자만 읽는다.
+    for archive in sorted(DIR.glob("*.zip")):
+        try:
+            record = submission_from_archive(archive)
+        except Exception as exc:
+            skipped.append(f"{archive.name} ({exc})")
+            continue
         if not record:
-            skipped.append(archive.name)
+            # 답안이 아닌 활동 로그만 제출된 경우에도 제출자 행은 리포트에 남긴다.
+            incomplete[inferred_submitter(archive.name)] = archive.name
             continue
         # ISO-8601 문자열은 시간순 정렬 가능. 동시간이면 중복 표기 없는 파일을 우선한다.
         prior = latest.get(record["name"])
-        rank = (timestamp_value(record["submitted_at"]), "(" not in archive.name, archive.name)
+        rank = (
+            timestamp_value(record["submitted_at"]),
+            "수정" in archive.name,
+            "(" not in archive.name,
+            archive.name,
+        )
         if prior is None or rank > prior[0]:
             latest[record["name"]] = (rank, archive.name, record)
 
@@ -65,6 +90,19 @@ def main():
         for _, archive_name, record in latest.values():
             safe_name = re.sub(r"[^0-9A-Za-z가-힣._-]+", "_", archive_name)
             (stage / f"{safe_name}.json").write_text(
+                json.dumps(record, ensure_ascii=False), encoding="utf-8"
+            )
+        for name, archive_name in incomplete.items():
+            # analyze_report.py가 채점 불가 제출로 렌더링하는 내부 표식.
+            record = {
+                "name": name,
+                "region": "-",
+                "answers": [],
+                "submitted_at": "",
+                "_report_status": "답안 30문항이 없는 활동 로그 제출",
+                "source_archive": archive_name,
+            }
+            (stage / f"{re.sub(r'[^0-9A-Za-z가-힣._-]+', '_', archive_name)}.json").write_text(
                 json.dumps(record, ensure_ascii=False), encoding="utf-8"
             )
         spec = importlib.util.spec_from_file_location("six_two_analysis", DIR / "analyze_report.py")
@@ -77,7 +115,7 @@ def main():
         shutil.rmtree(stage, ignore_errors=True)
     if skipped:
         print("[refresh] 인식 불가 ZIP:", ", ".join(skipped))
-    print(f"[refresh] 최신 제출 {len(latest)}명 반영 완료")
+    print(f"[refresh] 최신 제출 {len(latest)}명 + 채점 불가 {len(incomplete)}명 반영 완료")
 
 
 if __name__ == "__main__":
