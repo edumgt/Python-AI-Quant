@@ -1,0 +1,8 @@
+FROM pg-stock-0904:latest
+
+LABEL org.opencontainers.image.title="pg-stock-0904-data"
+LABEL org.opencontainers.image.description="PostgreSQL image seeded with the pg_stock_data volume backup from 2026-09-04"
+
+# Docker initializes the declared /var/lib/postgresql volume from this image
+# when a new container is created without an existing volume mount.
+ADD --chown=postgres:postgres pg-stock-data-volume-20260904.tar.gz /var/lib/postgresql/

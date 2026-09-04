@@ -12,3 +12,5 @@ play**/
 **/테스트*
 **/test*.zip
 **/*.zip
+*.tar
+*.gz

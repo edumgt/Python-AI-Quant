@@ -1,0 +1,13 @@
+# Private Docker Hub에만 게시할 데이터 전용 이미지.
+# 빌드 컨텍스트는 이 파일의 상위 폴더(investment-analysis)여야 한다.
+FROM alpine:3.21
+
+LABEL org.opencontainers.image.title="pg-stock-data-seed"
+LABEL org.opencontainers.image.description="Private PostgreSQL pg_stock_data volume seed"
+
+# 압축 상태로 보관해 전송 용량을 줄이고, 실행 시 named volume에 한 번만 푼다.
+COPY pg-stock-data-volume-20260904.tar.gz /seed/pg-stock-data-volume.tar.gz
+COPY pg-stock/seed.sh /seed/seed.sh
+RUN chmod 0555 /seed/seed.sh
+
+ENTRYPOINT ["/seed/seed.sh"]
