@@ -374,7 +374,7 @@ python3 scripts/sync_learning_menu.py
 - `DART_API_KEY` 등 선택 API 키가 비어 있으면 해당 외부 데이터 기능이 제한될 수 있습니다.
 
 
-## 본 7차 과정의 시험 방식 - 실습 50% 반영
+## 본 7차 과정의 시험 방식 - 실습 40% 반영
 ### 다음의 실습을 https://st.edumgt.co.kr/analysis.html 사이트를 통해 진행 합니다.(국비과정에 명기된 내용)
 - 매크로 분석: 경제지표 분석(금리, 물가, 유가 등 주요 지표 보는 법 ), 거시경제상황 분석 실습 
 - 산업 분석: 산업 경쟁력 분석(산업경쟁력 개념/분석모형, 산업별 분석방법), 산업 분석 실습 
@@ -387,9 +387,11 @@ python3 scripts/sync_learning_menu.py
 ### 위와 같이 전체적으로 클릭, 입력 이벤트의 작업에 대해 Applicaion - localstorage 에 데이타가 생성되며 80%가 넘은
 ### 해당 데이타 셋을 copy object 로 메모장에 복사. 압축하여 디스코드에 성명1.zip 으로 업로드 합니다.
 
-## 개발환경 구축 테스트 - 50% 반영
+## 개발환경 구축 테스트 - 30% 반영
 ### https://github.com/edumgt/investment-analysis repo 에 대해 각 수강생별 본인 PC 환경의 Docker 에서
 ### 실행 퀴즈 - 단어장 30문제에 대해 퀴즈 본 후 해당 결과를 mongodb 에서 데이타 추출( 이 모든 과정은 AI 의 도움을 받아 처리합니다.) 후 위와 같은 방법으로 성명2.zip 으로 업로드 합니다.
+
+## DockerHUB 에 최종 본 공유 - 30% 반영
 
 ## Git 명령어 일람
 
